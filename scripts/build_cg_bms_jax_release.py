@@ -135,6 +135,7 @@ class PFProvenance:
     metadata: dict[str, Any]
     sampler_kind: str
     density_mode: str
+    sampling_audit: dict[str, Any]
     no_clip_audit: dict[str, Any]
 
 
@@ -467,8 +468,27 @@ def _validate_arm_identity(
         backward_metadata,
     )
     sampling = pf.metadata.get("sampling")
-    if not isinstance(sampling, Mapping):
-        mismatches.append("pf.sampling: missing mapping")
+    if sampling is None:
+        require_equal(
+            "pf.sampling_audit.schema_status",
+            pf.sampling_audit.get("schema_status"),
+            "legacy_mapping_absent",
+        )
+        require_equal(
+            "pf.sampling_audit.archive_sample_count",
+            pf.sampling_audit.get("archive_sample_count"),
+            arm.expected_samples,
+        )
+        require_equal(
+            "pf.sampling_audit.expected_sample_count",
+            pf.sampling_audit.get("expected_sample_count"),
+            arm.expected_samples,
+        )
+    elif not isinstance(sampling, Mapping):
+        mismatches.append(
+            "pf.sampling: expected a mapping or an absent legacy field, "
+            f"found {type(sampling).__name__}"
+        )
     else:
         require_equal(
             "pf.sampling.global_num_samples",
@@ -756,6 +776,38 @@ def _pf_provenance(
             valid=valid,
             support=support,
         )
+        sampling = metadata.get("sampling")
+        if sampling is None:
+            sampling_audit = {
+                "schema_status": "legacy_mapping_absent",
+                "accepted_by": (
+                    "archive sample count, event shape, per-sample array "
+                    "shape, PF seed, solver settings, checkpoint SHA-256, "
+                    "and complete archive SHA-256 locks"
+                ),
+                "archive_sample_count": sample_count,
+                "expected_sample_count": expected_samples,
+                "coordinate_shape": list(coordinates.shape),
+                "weights_shape": list(np.asarray(archive["weights"]).shape),
+                "logq_ambient_shape": list(
+                    np.asarray(archive["logq_ambient"]).shape
+                ),
+                "target_reduced_energy_shape": list(
+                    np.asarray(archive["target_reduced_energy"]).shape
+                ),
+            }
+        elif isinstance(sampling, Mapping):
+            sampling_audit = {
+                "schema_status": "mapping_present",
+                "global_num_samples": sampling.get("global_num_samples"),
+                "local_num_samples": sampling.get("local_num_samples"),
+                "archive_sample_count": sample_count,
+                "expected_sample_count": expected_samples,
+            }
+        else:
+            raise TypeError(
+                f"sampling metadata in {path} must be a mapping when present"
+            )
 
     expected_metadata = {
         "forward_checkpoint_sha256": forward_sha256,
@@ -791,6 +843,7 @@ def _pf_provenance(
         metadata=metadata,
         sampler_kind=sampler_kind,
         density_mode=density_mode,
+        sampling_audit=sampling_audit,
         no_clip_audit=no_clip_audit,
     )
 
@@ -1995,6 +2048,7 @@ def _write_provenance(
             "density_mode": pf.density_mode,
             "arrays": pf.arrays,
             "metadata": pf.metadata,
+            "sampling_provenance_audit": pf.sampling_audit,
             "no_clip_audit": pf.no_clip_audit,
         },
     )
