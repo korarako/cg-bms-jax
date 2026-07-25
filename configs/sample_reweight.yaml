@@ -1,0 +1,38 @@
+defaults:
+  - experiment: mb_cg1d
+  - _self_
+
+seed: 3
+forward_checkpoint: ???
+# Set to "forward_pretrain" only for an explicitly labelled warm-controller
+# ablation.  The default formal workflow continues to require role=forward.
+forward_controller_kind: forward
+backward_checkpoint: ???
+num_samples: 20000
+batch_size: 256
+# Optional deterministic PF-ODE sharding.  When sampling_total_samples is
+# non-null, every shard constructs the key schedule of the corresponding
+# monolithic run and selects a contiguous range beginning at
+# sampling_batch_offset.  This makes concatenated shards bitwise equivalent to
+# one run with the same seed, total sample count, and batch size.
+sampling_total_samples: null
+sampling_batch_offset: 0
+progress_every_batches: 10
+# PMF/target evaluation is intentionally chunked independently of the total
+# number of samples.  null reuses batch_size and prevents a full-archive MACE
+# call from constructing an O(N) XLA graph that exceeds GPU memory.
+target_batch_size: null
+# Reuse an exact, provenance-checked PF trajectory stage when post-processing
+# is retried after an energy/evaluation failure.
+reuse_pf_stage: true
+output: outputs/${experiment.name}/samples_and_weights.npz
+likelihood:
+  solver: dopri5
+  dt0: 1.0e-3
+  rtol: 1.0e-5
+  atol: 1.0e-6
+  max_steps: 16384
+  divergence: exact
+reweight:
+  density_mode: exact_ambient
+  clip: null

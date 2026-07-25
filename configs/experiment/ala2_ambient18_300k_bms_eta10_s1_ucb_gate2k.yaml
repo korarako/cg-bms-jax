@@ -1,0 +1,16 @@
+defaults:
+  - ala2_ambient18_300k_bms_eta10_s1_gate2k
+  - _self_
+
+# Energy-only ablation: all controller, SDE, optimizer, replay, and training
+# settings are inherited unchanged; the target adds BMS's available CB
+# improper and no HA, bond, angle, or topology guard.
+name: ala2_ambient18_300k_bms_eta10_s1_ucb_gate2k
+
+target:
+  mode: pmf_cb_improper
+  cb_improper:
+    indices: [2, 1, 4, 3]  # CA, N, C, CB in core-beta bead order
+    location_rad: 0.6154797086703873  # +35 degrees
+    tolerance_rad: 0.4363323129985824  # 25 degrees
+    force_constant_kj_mol: 2412.1333030827507  # 25 eV/rad^2

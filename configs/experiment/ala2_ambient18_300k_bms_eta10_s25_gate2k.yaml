@@ -1,0 +1,11 @@
+defaults:
+  - ala2_ambient18_300k_bms_eta10_s1_gate2k
+  - _self_
+
+# Support-aware SDE ablation.  It differs from the s1 arm only in sigma_max.
+# A zero-control Monte Carlo audit gives about 99% connected MACE graphs here;
+# blindly porting the all-atom BMS sigma_max=6 gives only about 36%.
+name: ala2_ambient18_300k_bms_eta10_s25_gate2k
+
+sde:
+  sigma_max: 2.5

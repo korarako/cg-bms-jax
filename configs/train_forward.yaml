@@ -1,0 +1,28 @@
+defaults:
+  - experiment: mb_cg1d
+  - _self_
+
+seed: 0
+output_dir: outputs/${experiment.name}/forward
+resume: null
+# Parameters-only initialization.  This is deliberately distinct from resume:
+# optimizer slots, replay data, source step, and source target are never loaded.
+initialize_controller_from: null
+progress_every: 100
+# Match the upstream BMS epoch/outer semantics.  Intermediate checkpoints are
+# written only after a complete outer loop; the final outer is saved by the
+# normal final-result path.
+save_checkpoint_interval_outer: null
+# Upstream save_vis evaluates replay-buffer endpoint_1 samples synchronously
+# after the checkpoint at the same completed-outer boundary.
+save_vis_interval_outer: null
+save_vis_max_samples: 2048
+save_vis_target_batch_size: 64
+save_vis_n_bootstraps: 1
+save_vis_seed: 0
+# The upstream train-time evaluator uses one target validation set.  Keep the
+# much larger implicit trajectory out of this frequent diagnostic by default.
+save_vis_include_implicit_reference: false
+# Host-side metric retention only; this does not alter optimizer updates,
+# rollout cadence, replay sampling, or printed progress.
+history_every: 1

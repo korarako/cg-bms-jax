@@ -1,0 +1,11 @@
+defaults:
+  - ala2_ambient18_300k_cold_clip_c100_2k
+  - _self_
+
+# Wider reference-calibrated terminal-score cap.  Every other setting is
+# identical to C100 so this is a controlled one-parameter comparison.
+name: ala2_ambient18_300k_cold_clip_c150_2k
+
+training:
+  terminal_score_clip_norm: 150.0
+

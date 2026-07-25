@@ -1,0 +1,16 @@
+defaults:
+  - experiment: mb_cg1d
+  - _self_
+
+seed: 1
+forward_checkpoint: ???
+# Formal runs use a fixed-target forward checkpoint.  The explicit
+# "forward_pretrain" option exists only for controlled warm-vs-energy
+# ablations and never relabels the warm checkpoint as a formal forward model.
+forward_controller_kind: forward
+output_dir: outputs/${experiment.name}/backward
+resume: null
+progress_every: 100
+# Keep the runtime/checkpoint identity fixed while sweeping only the backward
+# estimator budget. null reproduces outer_iterations * gradient_steps.
+updates: null

@@ -1,0 +1,77 @@
+name: mb2d_analytic
+state_shape: [2]
+dimension: 2
+# The reduced target is beta * U. Runtime enforces kT == 1 / beta.
+kT: 1.0
+coordinate_mode: mb2d_affine
+
+# Controller state z is standardized; the analytic potential is evaluated at
+# physical xy = offset + scale * z.
+affine:
+  offset: [25.0, 25.0]
+  scale: [10.0, 10.0]
+
+target:
+  beta: 1.0
+  box:
+    - [0.0, 50.0]
+    - [0.0, 50.0]
+  confinement:
+    # Physical-coordinate units. The flat-bottom wall starts this far before
+    # each formal boundary and remains restoring outside formal support.
+    margin: [2.5, 2.5]
+    strength: 1.0
+    # Bounded C2 continuation used only when a rollout leaves the formal box.
+    extension_width: [2.5, 2.5]
+
+# LEGACY/FROZEN DATA IDENTITY: these endpoints are deliberately biased and
+# belong to the `biased_endpoint_stress_test`. They are not equilibrium, MD,
+# or reference endpoints. Keep this mapping unchanged so the completed
+# 2026-07-24 bridge checkpoints retain their historical identity. Canonical
+# equilibrium bridge runs use the separate
+# `mb2d_analytic_equilibrium_bridge` experiment.
+# This mapping is hashed into runtime/checkpoint identity.
+bridge_data:
+  schema_version: 1
+  distribution: full_support_diagonal_gaussian_mixture_v1
+  coordinate_space: physical
+  seed: 17
+  num_endpoints: 100000
+  components:
+    - label: basin_right
+      mean: [48.0, 8.0]
+      scale: [2.5, 2.5]
+      weight: 0.65
+    - label: basin_central
+      mean: [32.0, 16.0]
+      scale: [2.5, 2.5]
+      weight: 0.20
+    - label: basin_upper
+      mean: [24.0, 32.0]
+      scale: [2.5, 2.5]
+      weight: 0.13
+    - label: broad_tail
+      mean: [25.0, 25.0]
+      scale: [15.0, 15.0]
+      weight: 0.02
+
+source:
+  mean: 0.0
+  sigma: 1.0
+model:
+  kind: mlp
+  hidden_dims: [128, 128, 128]
+  time_embedding_dim: 32
+sde:
+  sigma_min: 0.01
+  sigma_max: 3.0
+  rho: 7.0
+  steps: 100
+training:
+  outer_iterations: 100
+  rollout_samples: 20000
+  buffer_capacity: 100000
+  batch_size: 1024
+  gradient_steps: 1000
+  learning_rate: 1.0e-4
+  damping: 10.0

@@ -1,0 +1,14 @@
+defaults:
+  - experiment: mb_cg1d
+  - _self_
+
+seed: 2
+forward_checkpoint: ???
+# "forward" uses the strict final-energy checkpoint boundary.  The diagnostic
+# "forward_pretrain" mode accepts only a verified warm initializer and labels
+# its archive so it can never be confused with a formal PF-ODE proposal.
+controller_kind: forward
+num_samples: 20000
+batch_size: 1024
+progress_every_batches: 10
+output: outputs/${experiment.name}/proposed_samples.npz

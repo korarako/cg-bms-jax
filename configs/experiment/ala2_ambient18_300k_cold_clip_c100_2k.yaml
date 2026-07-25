@@ -1,0 +1,35 @@
+defaults:
+  - ala2_ambient18_300k
+  - _self_
+
+# Parameter-only cold-start diagnostic.  The source and EDMSDE are kept at
+# the original BMS-style N(0,I) / sigma_max=1 values on purpose.  The only
+# target-side intervention is the per-bead terminal-score norm cap.
+name: ala2_ambient18_300k_cold_clip_c100_2k
+
+source:
+  mean: 0.0
+  sigma: 1.0
+
+model:
+  num_features: 128
+  num_layers: 5
+
+sde:
+  sigma_min: 0.01
+  sigma_max: 1.0
+  rho: 7.0
+  steps: 100
+
+training:
+  outer_iterations: 20
+  rollout_samples: 2048
+  buffer_capacity: 16384
+  batch_size: 64
+  gradient_steps: 100
+  learning_rate: 2.0e-5
+  damping: 50.0
+  gradient_clip_norm: 1.0
+  weight_decay: 1.0e-3
+  terminal_score_clip_norm: 100.0
+

@@ -1,0 +1,159 @@
+# Immutable compatibility snapshot exported from the verified positive
+# Warm10k -> Energy20k checkpoint.  Keep this fully resolved config unchanged:
+# its canonical digest is part of the forward/backward/PF provenance contract.
+# It exists only to reproduce the frozen CG Ala2 release result and contains
+# no all-atom Ala2 configuration.
+assets:
+  implicit_reference: assets/cache/Ac-Ala-NHMe/implicit/data.npz
+  pmf: assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/energy_params.pkl
+  reference: assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_ub/data.npz
+  topology: assets/cache/Ac-Ala-NHMe/explicit/core_beta/ala2_core_beta.pdb
+  train: assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/data.npz
+coordinate_mode: cgbg_ambient18
+coordinates:
+  anchor_bead: 0
+  com_sigma: 0.4082482904638631
+  domain_margin_fraction: 0.08
+  standardization: from_asset
+  wall_strength_kT: 10.0
+dimension: 18
+kT: 2.494338785445972
+model:
+  com_hidden_dims:
+  - 64
+  - 64
+  conservative: false
+  kind: painn
+  num_elements: 6
+  num_features: 128
+  num_layers: 5
+  num_radial_basis: 64
+  parity_breaking: true
+  r_max_nm: 0.8
+  r_offset_nm: 0.0
+  time_init_mode: node
+  unique_atom_indices: true
+name: ala2_ambient18_300k_bms_eta10_s1_canonical_additive_v3
+sde:
+  rho: 3.0
+  sigma_max: 1.0
+  sigma_min: 0.00101656
+  steps: 50
+source:
+  mean: 0.0
+  sigma: 1.0
+state_shape:
+- 6
+- 3
+target:
+  canonical_support:
+    angle_force_constant_kj_mol_rad2: 250.0
+    angle_indices:
+    - - 0
+      - 1
+      - 2
+    - - 1
+      - 2
+      - 3
+    - - 1
+      - 2
+      - 4
+    - - 3
+      - 2
+      - 4
+    - - 2
+      - 4
+      - 5
+    angle_lower_rad:
+    - 1.6580627893946132
+    - 1.3962634015954636
+    - 1.3962634015954636
+    - 1.3962634015954636
+    - 1.5707963267948966
+    angle_upper_rad:
+    - 2.705260340591211
+    - 2.443460952792061
+    - 2.530727415391778
+    - 2.530727415391778
+    - 2.530727415391778
+    bond_force_constant_kj_mol_nm2: 10000.0
+    bond_indices:
+    - - 0
+      - 1
+    - - 1
+      - 2
+    - - 2
+      - 3
+    - - 2
+      - 4
+    - - 4
+      - 5
+    bond_lower_nm:
+    - 0.11
+    - 0.12
+    - 0.13
+    - 0.13
+    - 0.11
+    bond_upper_nm:
+    - 0.155
+    - 0.175
+    - 0.18
+    - 0.18
+    - 0.155
+    repulsion_force_constant_kj_mol_nm2: 10000.0
+    repulsion_indices:
+    - - 0
+      - 2
+    - - 0
+      - 3
+    - - 0
+      - 4
+    - - 0
+      - 5
+    - - 1
+      - 3
+    - - 1
+      - 4
+    - - 1
+      - 5
+    - - 2
+      - 5
+    - - 3
+      - 4
+    - - 3
+      - 5
+    repulsion_min_nm: 0.18
+  cb_improper:
+    force_constant_kj_mol: 2412.133303082751
+    indices:
+    - 2
+    - 1
+    - 4
+    - 3
+    location_rad: 0.6154797086703873
+    tolerance_rad: 0.4363323129985824
+  implementation_abi: ala2_canonical_additive_v3
+  mode: pmf_canonical_support
+  pmf_energy_window:
+    lower_softness_kj_mol: 2.5
+    maximum_kj_mol: 1000.0
+    minimum_kj_mol: -330.0
+    upper_softness_kj_mol: 50.0
+  pmf_scale: 1.0
+temperature_kelvin: 300.0
+training:
+  batch_size: 64
+  buffer_capacity: 16384
+  damping: 10.0
+  final_learning_rate: 3.0e-05
+  gradient_clip_norm: 100.0
+  gradient_steps: 1000
+  learning_rate: 0.0001
+  learning_rate_decay_updates: 500000
+  outer_iterations: 20
+  previous_model_interval_outer: 1
+  rollout_samples: 2048
+  terminal_score_clip_norm: 100.0
+  terminal_score_clip_preserve_mean: true
+  time_epsilon: 1.0e-05
+  weight_decay: 0.001

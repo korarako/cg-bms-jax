@@ -1,0 +1,55 @@
+schema_version: 1
+repo_id: bojuntum/CGPeptides
+repo_type: dataset
+revision: 39765bbcfee382e5f30445589d7fe28ebb6cfff8
+license: MIT
+files:
+  mb_train:
+    experiment: mb_cg1d
+    path: MB/pmf_b/flow_b/data.npz
+    size_bytes: 280001024
+    sha256: 8151a89ffa8edebddedccb57f61b07e5540fad76f274d7362d2043e70b3f0e49
+  mb_pmf:
+    experiment: mb_cg1d
+    path: MB/pmf_b/flow_b/energy_params.pkl
+    size_bytes: 251585
+    sha256: e0a1dc4cc3bc85617dff697b01975e6c606e630b0cecbe9229ee0402473cda5b
+  mb_reference:
+    experiment: mb_cg1d
+    path: MB/pmf_b/flow_ub/data.npz
+    size_bytes: 40000256
+    sha256: 3ce7b2bb33a16b55c7fa8228edb16cfc4795803fdabbeb4da1110cdaba89d5fb
+  ala2_train:
+    experiment: ala2_ambient18_300k
+    path: Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/data.npz
+    size_bytes: 135001484
+    sha256: 0512abedd691b05a865e832ce6f77ec49f75a051da7cd18168ed65384b2498c2
+  ala2_pmf:
+    experiment: ala2_ambient18_300k
+    path: Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/energy_params.pkl
+    size_bytes: 432063
+    sha256: 2f855dd14408624aaf19caba4b128877f390eeb72718b0e634496ec4c5b9d45f
+  ala2_reference:
+    experiment: ala2_ambient18_300k
+    path: Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_ub/data.npz
+    size_bytes: 137001722
+    sha256: b71ef5e842c3f75527ac1006149e7c3545209472607d25a210027d9807af29fa
+  ala2_topology:
+    experiment: ala2_ambient18_300k
+    path: Ac-Ala-NHMe/explicit/core_beta/ala2_core_beta.pdb
+    size_bytes: 735
+    sha256: 64020cb5fe2719378186e46b5661711421a55d9e32d77fe3fa9cb9639a7e013d
+  ala2_implicit_reference:
+    experiment: ala2_ambient18_300k
+    path: Ac-Ala-NHMe/implicit/data.npz
+    size_bytes: 679002174
+    sha256: dc42a6395ca775be22e02ef421298194926fc0ae39d47f311e63982cd39881bf
+mapping:
+  bead_names: [ACE-C, ALA-N, ALA-CA, ALA-CB, ALA-C, NME-N]
+  phi: [0, 1, 2, 4]
+  psi: [1, 2, 4, 5]
+units:
+  coordinates: nm
+  energy: kJ/mol
+  force: kJ/mol/nm
+

@@ -1,0 +1,9 @@
+defaults:
+  - ala2_ambient18_300k_cold_clip_c150_2k
+  - _self_
+
+# Controlled C150 arm; only the terminal-score cap differs from C100.
+name: ala2_ambient18_300k_cold_clip_c150_probe100
+
+training:
+  outer_iterations: 1

@@ -1,0 +1,18 @@
+defaults:
+  - ala2_ambient18_300k_bms_eta10_official_cadence_additive_v3
+  - _self_
+
+# Long cold-start CG adaptation of the public BMS Ala2 optimization horizon.
+# This aligns the optimizer schedule and outer/update cadence; damping=10 and
+# the six-bead PMF+support+CB target remain deliberate CG experiment choices.
+name: ala2_ambient18_300k_bms_eta10_official700k_additive_v3
+
+training:
+  outer_iterations: 7000
+  gradient_steps: 100
+  batch_size: 64
+  learning_rate: 1.0e-4
+  learning_rate_warmup_updates: 5000
+  learning_rate_warmup_start_factor: 1.0e-3
+  learning_rate_decay_updates: 700000
+  final_learning_rate: 1.0e-5

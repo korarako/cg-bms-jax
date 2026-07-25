@@ -1,0 +1,9 @@
+defaults:
+  - ala2_ambient18_300k_cold_clip_c100_2k
+  - _self_
+
+# First-stage numerical/geometry gate before committing to a longer run.
+name: ala2_ambient18_300k_cold_clip_c100_probe100
+
+training:
+  outer_iterations: 1

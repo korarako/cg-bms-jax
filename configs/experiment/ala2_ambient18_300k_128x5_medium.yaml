@@ -1,0 +1,14 @@
+defaults:
+  - ala2_ambient18_300k
+  - _self_
+
+name: ala2_ambient18_300k_128x5_medium
+model:
+  num_features: 128
+  num_layers: 5
+training:
+  outer_iterations: 20
+  rollout_samples: 1024
+  buffer_capacity: 32768
+  batch_size: 64
+  gradient_steps: 500

@@ -1,0 +1,36 @@
+defaults:
+  - ala2_ambient18_300k_bms_eta10_s1_canonical_additive_v3
+  - _self_
+
+# Controlled CG adaptation of the public BMS Ala2 configuration at commit
+# d19a27b854fd77387c43109e37b597bc35252e7d.  The six-bead ambient-18 state,
+# CG-BG PMF target, damping=10, score clipping, and training wall remain CG
+# choices.  The fields below deliberately align the requested BMS model,
+# replay cadence, frozen-iterate cadence, and physical EDM noise scale.
+name: ala2_ambient18_300k_bms_eta10_official_cadence_additive_v3
+
+model:
+  num_features: 128
+  num_layers: 4
+  num_radial_basis: 64
+  # Official cutoff 8 Angstrom expressed in the CG project's nm units.
+  r_max_nm: 0.8
+  r_offset_nm: 0.0
+
+sde:
+  # Runtime first promotes the CG coordinates to float64, then divides by
+  # std=0.09837129980298966 nm.  Thus 0.001 Angstrom maps to
+  # 0.0010165566603295086 and 6 Angstrom maps to 6.0993399619770505.
+  sigma_min: 0.0010165566603295086
+  sigma_max: 6.0993399619770505
+  rho: 3.0
+  steps: 50
+
+training:
+  # Official BMS: add 256 endpoint pairs, then take 100 optimizer updates.
+  # The first outer iteration also serves as the initial 256-sample fill.
+  rollout_samples: 256
+  buffer_capacity: 2048
+  batch_size: 64
+  gradient_steps: 100
+  previous_model_interval_outer: 25

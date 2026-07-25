@@ -1,0 +1,56 @@
+defaults:
+  - ala2_ambient18_300k_bms_eta10_s1_gate2k
+  - _self_
+
+# Recommended fixed-target Ala2 line.  Controller, source, SDE, replay,
+# optimizer, clipping, and update counts are inherited unchanged.  Unlike the
+# legacy v2 diagnostic, this target has no coordinate-dependent PMF gate:
+#
+#   U = pmf_scale * window(U_CG-BG_PMF)
+#       + U_fixed_bonds + U_fixed_angles + U_nonbonded_repulsion + U_CB
+#
+# The topology and chirality terms are permanent parts of this configured
+# target.  pmf_scale is an explicit scalar so later curriculum experiments can
+# be represented without changing the energy implementation.
+name: ala2_ambient18_300k_bms_eta10_s1_canonical_additive_v3
+
+target:
+  mode: pmf_canonical_support
+  implementation_abi: ala2_canonical_additive_v3
+  pmf_scale: 1.0
+
+  # The published support is approximately [-313.6,-248.2] kJ/mol.  The lower
+  # edge suppresses the observed spurious OOD wells.  The deliberately broad,
+  # soft upper edge preserves PMF gradients over a much wider recovery region
+  # than the legacy [-330,-230] diagnostic window.
+  pmf_energy_window:
+    minimum_kj_mol: -330.0
+    maximum_kj_mol: 1000.0
+    lower_softness_kj_mol: 2.5
+    upper_softness_kj_mol: 50.0
+
+  canonical_support:
+    # 0 ACE-C, 1 ALA-N, 2 ALA-CA, 3 ALA-CB, 4 ALA-C, 5 NME-N
+    bond_indices: [[0, 1], [1, 2], [2, 3], [2, 4], [4, 5]]
+    bond_lower_nm: [0.110, 0.120, 0.130, 0.130, 0.110]
+    bond_upper_nm: [0.155, 0.175, 0.180, 0.180, 0.155]
+    bond_force_constant_kj_mol_nm2: 10000.0
+
+    # Broad local covalent angles only; no backbone torsion/Rama target.
+    angle_indices: [[0, 1, 2], [1, 2, 3], [1, 2, 4], [3, 2, 4], [2, 4, 5]]
+    angle_lower_rad: [1.6580627893946132, 1.3962634015954636, 1.3962634015954636, 1.3962634015954636, 1.5707963267948966]
+    angle_upper_rad: [2.705260340591211, 2.443460952792061, 2.530727415391778, 2.530727415391778, 2.530727415391778]
+    angle_force_constant_kj_mol_rad2: 250.0
+
+    # All ten nonbonded pairs.  The published mapped data have minimum
+    # nonbonded separation >0.217 nm, so this term is flat on the reference.
+    repulsion_indices: [[0, 2], [0, 3], [0, 4], [0, 5], [1, 3], [1, 4], [1, 5], [2, 5], [3, 4], [3, 5]]
+    repulsion_min_nm: 0.180
+    repulsion_force_constant_kj_mol_nm2: 10000.0
+
+  # Exact BMS CB-improper parameters, translated from 25 eV/rad^2 to kJ/mol.
+  cb_improper:
+    indices: [2, 1, 4, 3]  # CA, N, C, CB
+    location_rad: 0.6154797086703873  # +35 degrees
+    tolerance_rad: 0.4363323129985824  # 25 degrees
+    force_constant_kj_mol: 2412.1333030827507

@@ -1,0 +1,17 @@
+defaults:
+  - experiment: mb_cg1d
+  - _self_
+
+samples: ???
+output_dir: outputs/${experiment.name}/evaluation
+implicit_reference_override: data/ala2/implicit_obc1_openmm.npz
+bootstrap: true
+n_bootstraps: 500
+compat_clip_percentile: 99.0
+# Full-atom Ala2 evaluates only the held-out chronological test block.  The
+# smoke experiments pin a smaller cap in experiment.bridge_data.
+reference_max_frames: null
+reference_target_batch_size: 64
+# Use validation for checkpoint/proposal selection. Reserve test for the final
+# frozen controller and formal report.
+reference_split: test

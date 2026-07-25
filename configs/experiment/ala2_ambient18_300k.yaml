@@ -1,0 +1,47 @@
+name: ala2_ambient18_300k
+state_shape: [6, 3]
+dimension: 18
+temperature_kelvin: 300.0
+kT: 2.494338785445972
+coordinate_mode: cgbg_ambient18
+assets:
+  pmf: assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/energy_params.pkl
+  train: assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/data.npz
+  reference: assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_ub/data.npz
+  topology: assets/cache/Ac-Ala-NHMe/explicit/core_beta/ala2_core_beta.pdb
+  implicit_reference: assets/cache/Ac-Ala-NHMe/implicit/data.npz
+coordinates:
+  standardization: from_asset
+  com_sigma: 0.4082482904638631
+  anchor_bead: 0
+  domain_margin_fraction: 0.08
+  wall_strength_kT: 10.0
+source:
+  mean: 0.0
+  sigma: 1.0
+model:
+  kind: painn
+  num_features: 256
+  num_radial_basis: 64
+  num_layers: 6
+  r_max_nm: 0.8
+  r_offset_nm: 0.0
+  time_init_mode: node
+  parity_breaking: true
+  unique_atom_indices: true
+  num_elements: 6
+  conservative: false
+  com_hidden_dims: [64, 64]
+sde:
+  sigma_min: 0.01
+  sigma_max: 1.0
+  rho: 7.0
+  steps: 100
+training:
+  outer_iterations: 100
+  rollout_samples: 20000
+  buffer_capacity: 100000
+  batch_size: 512
+  gradient_steps: 1000
+  learning_rate: 1.0e-4
+  damping: 10.0

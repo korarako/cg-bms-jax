@@ -1,0 +1,57 @@
+# Publication allowlist for the initial cg-bms-jax v0.1.0 commit.
+#
+# Syntax:
+#   path <repository-relative file>
+#   tree <repository-relative directory>
+#   glob <repository-relative directory> <single-segment filename pattern>
+#
+# This is intentionally narrower than the working tree. In particular, only
+# the atomic frozen release bundle under artifacts/ is publishable.
+
+path .gitattributes
+path .gitignore
+path CITATION.cff
+path environment.yml
+path LICENSE
+path pyproject.toml
+path README.md
+path THIRD_PARTY_NOTICES.md
+path UPSTREAM.md
+
+tree LICENSES
+tree src
+tree tests
+
+path assets/manifest.yaml
+
+glob configs *.yaml
+glob configs/experiment mb*.yaml
+glob configs/experiment ala2_ambient18*.yaml
+glob configs/experiment ala2_cg*.yaml
+
+tree data/mb2d_equilibrium_exact_v1
+
+path docs/MB2D_ENDPOINT_DATASETS.md
+path docs/MB_EXPERIMENT_MATRIX.md
+path docs/PUBLISHING_V0.1.0.md
+path docs/RELEASE_RESULTS_V0.1.0.md
+path docs/periodic_forward_diagnostics.md
+
+glob scripts *.py
+path scripts/create_env.sh
+path scripts/finalize_mb2d_equilibrium_bridge_matrix.sh
+path scripts/run_additive_v3_20k_validation.sh
+path scripts/run_ala2_cg_release_pf10k.sh
+path scripts/run_ala2_cold_clip_probe.sh
+path scripts/run_ala2_energy20k_backward20k_pf20k_eval.sh
+path scripts/run_ala2_warm100k_energy100k.sh
+path scripts/run_mb2d_controlled_sweeps.sh
+path scripts/run_mb2d_equilibrium_bridge_matrix.sh
+path scripts/run_mb2d_formal_matrix.sh
+path scripts/run_mb_cg1d_three_seed.sh
+path scripts/run_mb_cg1d_three_seed_parallel.sh
+path scripts/run_smoke.sh
+path scripts/run_warm_vs_energy_b20k_pf20k.sh
+path scripts/watch_warm10k_e20k_then_eval.sh
+
+tree artifacts/release_v0.1.0
