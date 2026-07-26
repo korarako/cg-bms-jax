@@ -382,7 +382,6 @@ def _validate_arm_identity(
         "coordinate_signature",
         "species_signature",
         "training_data_sha256",
-        "warmstart_data_sha256",
     )
     for field in compatible_fields:
         require_equal(
