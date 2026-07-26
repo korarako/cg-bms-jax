@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -28,7 +29,9 @@ FORBIDDEN_PATH_MARKERS = (
     "openmm",
     "ambient66",
     "ala2_aa",
-    "66d",
+)
+FORBIDDEN_TOKEN_PATTERNS = (
+    ("66d", re.compile(r"(?<![0-9a-z])66d(?![0-9a-z])", re.IGNORECASE)),
 )
 FORBIDDEN_SUFFIXES = (
     ".ckpt",
@@ -60,14 +63,18 @@ def _sha256(path: Path) -> str:
 
 def _normalise_string_set(value: Any, field: str) -> set[str]:
     if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
-        raise ScopeValidationError(f"MANIFEST.json field {field!r} must be a list of strings")
+        raise ScopeValidationError(
+            f"MANIFEST.json field {field!r} must be a list of strings"
+        )
     return {item.strip().lower() for item in value}
 
 
 def _release_scope(manifest: dict[str, Any]) -> tuple[set[str], set[str]]:
     scope = manifest.get("release_scope")
     if not isinstance(scope, dict):
-        raise ScopeValidationError("MANIFEST.json must contain an object named 'release_scope'")
+        raise ScopeValidationError(
+            "MANIFEST.json must contain an object named 'release_scope'"
+        )
 
     included = _normalise_string_set(
         scope.get("included_benchmark_families"),
@@ -88,13 +95,19 @@ def _manifest_files(manifest: dict[str, Any]) -> dict[str, str]:
     result: dict[str, str] = {}
     for index, record in enumerate(records):
         if not isinstance(record, dict):
-            raise ScopeValidationError(f"MANIFEST.json files[{index}] must be an object")
+            raise ScopeValidationError(
+                f"MANIFEST.json files[{index}] must be an object"
+            )
         raw_path = record.get("path")
         raw_sha = record.get("sha256")
         if not isinstance(raw_path, str) or not raw_path:
-            raise ScopeValidationError(f"MANIFEST.json files[{index}].path must be a non-empty string")
+            raise ScopeValidationError(
+                f"MANIFEST.json files[{index}].path must be a non-empty string"
+            )
         if not isinstance(raw_sha, str) or len(raw_sha) != 64:
-            raise ScopeValidationError(f"MANIFEST.json files[{index}].sha256 must be a 64-character digest")
+            raise ScopeValidationError(
+                f"MANIFEST.json files[{index}].sha256 must be a 64-character digest"
+            )
 
         posix = PurePosixPath(raw_path.replace("\\", "/"))
         if posix.is_absolute() or ".." in posix.parts:
@@ -110,7 +123,16 @@ def _manifest_files(manifest: dict[str, Any]) -> dict[str, str]:
 
 def _contains_marker(value: str) -> str | None:
     lowered = value.lower()
-    return next((marker for marker in FORBIDDEN_PATH_MARKERS if marker in lowered), None)
+    substring = next(
+        (marker for marker in FORBIDDEN_PATH_MARKERS if marker in lowered),
+        None,
+    )
+    if substring is not None:
+        return substring
+    return next(
+        (label for label, pattern in FORBIDDEN_TOKEN_PATTERNS if pattern.search(value)),
+        None,
+    )
 
 
 def _validate_paths(root: Path, files: list[Path]) -> None:
@@ -126,12 +148,18 @@ def _validate_paths(root: Path, files: list[Path]) -> None:
 
         marker = _contains_marker(relative)
         if marker is not None:
-            errors.append(f"forbidden all-atom result marker {marker!r} in path {relative}")
+            errors.append(
+                f"forbidden all-atom result marker {marker!r} in path {relative}"
+            )
 
         if lowered.endswith(FORBIDDEN_SUFFIXES):
-            errors.append(f"raw/runtime artifact is not allowed in the frozen bundle: {relative}")
+            errors.append(
+                f"raw/runtime artifact is not allowed in the frozen bundle: {relative}"
+            )
         if size > MAX_FILE_BYTES:
-            errors.append(f"file exceeds {MAX_FILE_BYTES // (1024 * 1024)} MiB limit: {relative}")
+            errors.append(
+                f"file exceeds {MAX_FILE_BYTES // (1024 * 1024)} MiB limit: {relative}"
+            )
 
         for family in EXPECTED_FAMILIES:
             if family in lowered:
@@ -140,7 +168,10 @@ def _validate_paths(root: Path, files: list[Path]) -> None:
         if (
             path.suffix.lower() in MACHINE_METADATA_SUFFIXES
             and relative != "MANIFEST.json"
-            and any(part in {"metrics", "parameters", "provenance"} for part in path.relative_to(root).parts)
+            and any(
+                part in {"metrics", "parameters", "provenance"}
+                for part in path.relative_to(root).parts
+            )
         ):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -154,10 +185,14 @@ def _validate_paths(root: Path, files: list[Path]) -> None:
                     )
 
     if total_bytes > MAX_BUNDLE_BYTES:
-        errors.append(f"bundle exceeds {MAX_BUNDLE_BYTES // (1024 * 1024)} MiB total-size limit")
+        errors.append(
+            f"bundle exceeds {MAX_BUNDLE_BYTES // (1024 * 1024)} MiB total-size limit"
+        )
     for family, count in family_evidence.items():
         if count == 0:
-            errors.append(f"bundle has no path-level evidence for required family {family!r}")
+            errors.append(
+                f"bundle has no path-level evidence for required family {family!r}"
+            )
 
     if errors:
         raise ScopeValidationError("\n".join(errors))
@@ -166,7 +201,9 @@ def _validate_paths(root: Path, files: list[Path]) -> None:
 def validate_release_bundle(root: Path) -> dict[str, Any]:
     root = root.resolve()
     if not root.is_dir():
-        raise ScopeValidationError(f"release bundle does not exist or is not a directory: {root}")
+        raise ScopeValidationError(
+            f"release bundle does not exist or is not a directory: {root}"
+        )
 
     manifest_path = root / "MANIFEST.json"
     if not manifest_path.is_file():
@@ -186,21 +223,26 @@ def validate_release_bundle(root: Path) -> dict[str, Any]:
         )
     if REQUIRED_EXCLUSION not in excluded:
         raise ScopeValidationError(
-            "release_scope.excluded_benchmark_families must include " f"{REQUIRED_EXCLUSION!r}"
+            "release_scope.excluded_benchmark_families must include "
+            f"{REQUIRED_EXCLUSION!r}"
         )
 
     actual_files = sorted(
         path for path in root.rglob("*") if path.is_file() and path != manifest_path
     )
     if not actual_files:
-        raise ScopeValidationError("release bundle contains no files besides MANIFEST.json")
+        raise ScopeValidationError(
+            "release bundle contains no files besides MANIFEST.json"
+        )
     _validate_paths(root, actual_files)
 
     recorded = _manifest_files(manifest)
     actual = {path.relative_to(root).as_posix(): _sha256(path) for path in actual_files}
     missing = sorted(set(actual) - set(recorded))
     stale = sorted(set(recorded) - set(actual))
-    mismatched = sorted(path for path in set(actual) & set(recorded) if actual[path] != recorded[path])
+    mismatched = sorted(
+        path for path in set(actual) & set(recorded) if actual[path] != recorded[path]
+    )
     errors: list[str] = []
     if missing:
         errors.append(f"files missing from MANIFEST.json: {missing}")

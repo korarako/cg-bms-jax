@@ -34,7 +34,9 @@ def _write_bundle(root: Path, *, forbidden: bool = False) -> None:
         "parameters/ala2_cg/config.yaml": b"experiment: ala2_ambient18_300k\n",
     }
     if forbidden:
-        files["metrics/ala2_allatom/openmm.json"] = b'{"coordinate_mode": "ambient66"}\n'
+        files["metrics/ala2_allatom/openmm.json"] = (
+            b'{"coordinate_mode": "ambient66"}\n'
+        )
 
     records = []
     for relative, content in files.items():
@@ -64,17 +66,32 @@ def test_release_scope_accepts_only_declared_cg_benchmarks(tmp_path: Path) -> No
     _write_bundle(tmp_path)
     result = validator.validate_release_bundle(tmp_path)
     assert result["verification"] == "PASS"
-    assert result["included_benchmark_families"] == ["ala2_cg", "mb2d_analytic", "mb_cg1d"]
+    assert result["included_benchmark_families"] == [
+        "ala2_cg",
+        "mb2d_analytic",
+        "mb_cg1d",
+    ]
 
 
 def test_release_scope_rejects_all_atom_result_path(tmp_path: Path) -> None:
     _write_bundle(tmp_path, forbidden=True)
-    with pytest.raises(validator.ScopeValidationError, match="forbidden all-atom result marker"):
+    with pytest.raises(
+        validator.ScopeValidationError, match="forbidden all-atom result marker"
+    ):
         validator.validate_release_bundle(tmp_path)
+
+
+def test_release_scope_uses_token_boundaries_for_66d_marker() -> None:
+    assert validator._contains_marker('{"coordinate_mode": "66D"}') == "66d"
+    assert validator._contains_marker("ala2_66d_checkpoint") == "66d"
+    assert validator._contains_marker('{"sha256": "abc66def0123"}') is None
+    assert validator._contains_marker('{"sha256": "0123abc66d"}') is None
 
 
 def test_release_scope_rejects_unlisted_file(tmp_path: Path) -> None:
     _write_bundle(tmp_path)
     (tmp_path / "figures" / "mb_cg1d" / "extra.png").write_bytes(b"not recorded")
-    with pytest.raises(validator.ScopeValidationError, match="files missing from MANIFEST"):
+    with pytest.raises(
+        validator.ScopeValidationError, match="files missing from MANIFEST"
+    ):
         validator.validate_release_bundle(tmp_path)
