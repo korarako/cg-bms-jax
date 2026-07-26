@@ -318,6 +318,8 @@ def _validate_arm_identity(
 ) -> None:
     """Lock a path label to its actual controller, target and data identity."""
 
+    from cg_bms_jax.checkpoint import canonical_config_sha256
+
     forward_metadata = _checkpoint_metadata(forward)
     backward_metadata = _checkpoint_metadata(backward)
     mismatches: list[str] = []
@@ -345,16 +347,30 @@ def _validate_arm_identity(
         backward_metadata.get("parent_forward_sha256"),
         forward.sha256,
     )
-    require_equal(
-        "forward.config_sha256",
-        forward_metadata.get("config_sha256"),
-        expected_config_sha256,
-    )
-    require_equal(
-        "backward.config_sha256",
-        backward_metadata.get("config_sha256"),
-        expected_config_sha256,
-    )
+    for label, checkpoint, metadata in (
+        ("forward", forward, forward_metadata),
+        ("backward", backward, backward_metadata),
+    ):
+        saved_config = checkpoint.manifest.get("config")
+        if not isinstance(saved_config, Mapping):
+            mismatches.append(f"{label}.manifest.config: missing mapping")
+            continue
+        saved_experiment = saved_config.get("experiment", saved_config)
+        if not isinstance(saved_experiment, Mapping):
+            mismatches.append(
+                f"{label}.manifest.config.experiment: missing mapping"
+            )
+            continue
+        require_equal(
+            f"{label}.config_sha256",
+            metadata.get("config_sha256"),
+            canonical_config_sha256(saved_config),
+        )
+        require_equal(
+            f"{label}.experiment_config_sha256",
+            canonical_config_sha256(saved_experiment),
+            expected_config_sha256,
+        )
 
     compatible_fields = (
         "schema_version",
