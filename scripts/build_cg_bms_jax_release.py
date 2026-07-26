@@ -136,6 +136,7 @@ class PFProvenance:
     sampler_kind: str
     density_mode: str
     sampling_audit: dict[str, Any]
+    endpoint_metadata_audit: dict[str, Any]
     no_clip_audit: dict[str, Any]
 
 
@@ -435,22 +436,52 @@ def _validate_arm_identity(
         "formal_target_signature",
         "training_target_signature",
         "topology_signature",
-        "endpoint_distribution",
-        "configured_endpoint_spec_sha256",
-        "synthetic_endpoint_spec_sha256",
-        "equilibrium_endpoint_spec_sha256",
     )
     for field in pf_identity_fields:
         expected = expected_identity.get(field)
-        if expected is not None or field in {
-            "synthetic_endpoint_spec_sha256",
-            "equilibrium_endpoint_spec_sha256",
-        }:
+        if expected is not None:
             require_equal(
                 f"pf.metadata.{field}",
                 pf.metadata.get(field),
                 expected,
             )
+    endpoint_fields: tuple[str, ...]
+    if arm.data_identity == "endpoint_independent_energy_bms":
+        endpoint_fields = ()
+    elif arm.data_identity == "deliberately_biased_synthetic_full_support_v1":
+        endpoint_fields = (
+            "endpoint_distribution",
+            "configured_endpoint_spec_sha256",
+            "synthetic_endpoint_spec_sha256",
+        )
+    elif arm.data_identity == "equilibrium_exact_v1":
+        endpoint_fields = (
+            "endpoint_distribution",
+            "configured_endpoint_spec_sha256",
+            "equilibrium_endpoint_spec_sha256",
+        )
+    else:
+        endpoint_fields = ()
+    missing_endpoint_fields: list[str] = []
+    for field in endpoint_fields:
+        if field in pf.metadata:
+            require_equal(
+                f"pf.metadata.{field}",
+                pf.metadata[field],
+                expected_identity.get(field),
+            )
+        else:
+            missing_endpoint_fields.append(field)
+    audited_missing_endpoint_fields = [
+        field
+        for field in pf.endpoint_metadata_audit.get("missing_fields", [])
+        if field in endpoint_fields
+    ]
+    require_equal(
+        "pf.endpoint_metadata_audit.missing_fields",
+        audited_missing_endpoint_fields,
+        missing_endpoint_fields,
+    )
     require_equal(
         "pf.forward_controller_kind",
         pf.metadata.get("forward_controller_kind"),
@@ -808,6 +839,28 @@ def _pf_provenance(
             raise TypeError(
                 f"sampling metadata in {path} must be a mapping when present"
             )
+        endpoint_identity_fields = (
+            "endpoint_distribution",
+            "configured_endpoint_spec_sha256",
+            "synthetic_endpoint_spec_sha256",
+            "equilibrium_endpoint_spec_sha256",
+        )
+        endpoint_metadata_audit = {
+            "schema_status": (
+                "all_fields_present"
+                if all(field in metadata for field in endpoint_identity_fields)
+                else "legacy_fields_partially_or_fully_absent"
+            ),
+            "present_fields": [
+                field for field in endpoint_identity_fields if field in metadata
+            ],
+            "missing_fields": [
+                field
+                for field in endpoint_identity_fields
+                if field not in metadata
+            ],
+            "accepted_missing_fields_require_checkpoint_data_linkage": True,
+        }
 
     expected_metadata = {
         "forward_checkpoint_sha256": forward_sha256,
@@ -844,6 +897,7 @@ def _pf_provenance(
         sampler_kind=sampler_kind,
         density_mode=density_mode,
         sampling_audit=sampling_audit,
+        endpoint_metadata_audit=endpoint_metadata_audit,
         no_clip_audit=no_clip_audit,
     )
 
@@ -2049,6 +2103,7 @@ def _write_provenance(
             "arrays": pf.arrays,
             "metadata": pf.metadata,
             "sampling_provenance_audit": pf.sampling_audit,
+            "endpoint_metadata_audit": pf.endpoint_metadata_audit,
             "no_clip_audit": pf.no_clip_audit,
         },
     )
