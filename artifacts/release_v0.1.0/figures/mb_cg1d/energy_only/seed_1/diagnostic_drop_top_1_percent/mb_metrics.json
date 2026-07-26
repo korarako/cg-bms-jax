@@ -1,0 +1,61 @@
+{
+  "logw_variance": 4.400780239899637,
+  "max_weight": 2.0305107441375397e-05,
+  "plot_style": {
+    "density_rendering": "filled_with_outline",
+    "fes_colormap": "viridis",
+    "fill_alpha": {
+      "proposal": 0.56,
+      "reference": 0.52,
+      "reweighted": 0.58
+    },
+    "palette": {
+      "exact": "#000000",
+      "implicit_reference": "#9467BD",
+      "proposal": "#F2A174",
+      "reference": "#8FD18B",
+      "reweighted_fill": "#B9CBEA",
+      "reweighted_outline": "#4472C4"
+    },
+    "two_dimensional_panels": "standalone_no_overlay"
+  },
+  "unweighted_bootstrap": {
+    "ESS_Percent": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "JS_Divergence": {
+      "mean": 0.07936280450965219,
+      "std": 0.0005899778780400243
+    },
+    "PMF_Error": {
+      "mean": 1.4753622105247415,
+      "std": 0.09080389414861398
+    }
+  },
+  "unweighted_direct": {
+    "ESS_Percent": 1.0,
+    "JS_Divergence": 0.0793199735232697,
+    "PMF_Error": 1.3488401640200212
+  },
+  "weight_source": "logw",
+  "weighted_bootstrap": {
+    "ESS_Percent": {
+      "mean": 0.6397370257046291,
+      "std": 1.1102230246251565e-16
+    },
+    "JS_Divergence": {
+      "mean": 0.0010387671682207166,
+      "std": 6.768500340003688e-05
+    },
+    "PMF_Error": {
+      "mean": 0.012174092455832515,
+      "std": 0.0017949109729940341
+    }
+  },
+  "weighted_direct": {
+    "ESS_Percent": 0.6397370257046291,
+    "JS_Divergence": 0.0009222564172788252,
+    "PMF_Error": 0.007491109423902291
+  }
+}

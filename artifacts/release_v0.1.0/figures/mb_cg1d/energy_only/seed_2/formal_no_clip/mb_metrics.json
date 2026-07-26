@@ -1,0 +1,61 @@
+{
+  "logw_variance": 5.158869167947504,
+  "max_weight": 0.00011801126907795568,
+  "plot_style": {
+    "density_rendering": "filled_with_outline",
+    "fes_colormap": "viridis",
+    "fill_alpha": {
+      "proposal": 0.56,
+      "reference": 0.52,
+      "reweighted": 0.58
+    },
+    "palette": {
+      "exact": "#000000",
+      "implicit_reference": "#9467BD",
+      "proposal": "#F2A174",
+      "reference": "#8FD18B",
+      "reweighted_fill": "#B9CBEA",
+      "reweighted_outline": "#4472C4"
+    },
+    "two_dimensional_panels": "standalone_no_overlay"
+  },
+  "unweighted_bootstrap": {
+    "ESS_Percent": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "JS_Divergence": {
+      "mean": 0.08401649853629138,
+      "std": 0.0006117908567185861
+    },
+    "PMF_Error": {
+      "mean": 1.7576730526874011,
+      "std": 0.11774406524479063
+    }
+  },
+  "unweighted_direct": {
+    "ESS_Percent": 1.0,
+    "JS_Divergence": 0.0839560499290645,
+    "PMF_Error": 1.5920562504969376
+  },
+  "weight_source": "weights",
+  "weighted_bootstrap": {
+    "ESS_Percent": {
+      "mean": 0.6299663647879525,
+      "std": 2.220446049250313e-16
+    },
+    "JS_Divergence": {
+      "mean": 0.00025048776542268165,
+      "std": 3.087731454749996e-05
+    },
+    "PMF_Error": {
+      "mean": 0.005619599280030581,
+      "std": 0.0016437945199388431
+    }
+  },
+  "weighted_direct": {
+    "ESS_Percent": 0.6299663647879528,
+    "JS_Divergence": 0.00013335135253702478,
+    "PMF_Error": 0.0010978091834184201
+  }
+}

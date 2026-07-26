@@ -1,0 +1,150 @@
+{
+  "estimator": {
+    "clip": null,
+    "density_mode": "ambient_exact",
+    "formal": true,
+    "raw_formula": "-target_reduced_energy-logq_ambient"
+  },
+  "metrics": {
+    "energy_plot_view": {
+      "display_only": true,
+      "exact": {
+        "above_view_mass": 0.003622892093059334,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.003622892093059334,
+        "visible_mass": 0.9963771079069403
+      },
+      "exact_curve_smoothing": {
+        "display_only": true,
+        "formal_metrics_unchanged": true,
+        "mass_preserved": true,
+        "method": "gaussian_kernel_on_histogram_bins",
+        "sigma_bins": 2.0
+      },
+      "formal_no_clip": true,
+      "histogram_bins": 240,
+      "limits": [
+        -13.030936339766818,
+        -5.31841609196181
+      ],
+      "lower_quantile": 0.005,
+      "padding_fraction": 0.05,
+      "proposal": {
+        "above_view_mass": 0.00368,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.00368,
+        "visible_mass": 0.99632
+      },
+      "reweighted": {
+        "above_view_mass": 0.0036430699446455125,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.0036430699446455125,
+        "visible_mass": 0.9963569300553544
+      },
+      "sample_usage": "all",
+      "upper_quantile": 0.995
+    },
+    "num_samples": 100000,
+    "plot_style": {
+      "density_rendering": "filled_with_outline",
+      "fes_colormap": "viridis",
+      "fill_alpha": {
+        "proposal": 0.56,
+        "reference": 0.52,
+        "reweighted": 0.58
+      },
+      "palette": {
+        "exact": "#000000",
+        "implicit_reference": "#9467BD",
+        "proposal": "#F2A174",
+        "reference": "#8FD18B",
+        "reweighted_fill": "#B9CBEA",
+        "reweighted_outline": "#4472C4"
+      },
+      "two_dimensional_panels": "standalone_no_overlay"
+    },
+    "target": {
+      "beta": 1.0,
+      "bins": [
+        160,
+        160
+      ],
+      "domain": [
+        [
+          0.0,
+          50.0
+        ],
+        [
+          0.0,
+          50.0
+        ]
+      ],
+      "kT": 1.0,
+      "kind": "analytic_muller_brown_2d"
+    },
+    "unweighted": {
+      "basin_l1_error": 0.030769739470575496,
+      "basin_mass": {
+        "center": 0.00821,
+        "lower_right": 0.01885,
+        "upper_left": 0.97294
+      },
+      "energy_mean": -11.473768483004768,
+      "energy_mean_error": -0.03605609092411122,
+      "exact_basin_mass": {
+        "center": 0.009044794930342883,
+        "lower_right": 0.03340007480494476,
+        "upper_left": 0.9575551302647122
+      },
+      "exact_energy_mean": -11.437712392080657,
+      "in_domain_mass": 1.0,
+      "js_2d": 0.008536317435058335,
+      "pmf_rmse": 1.7149373653255657
+    },
+    "weight_diagnostics": {
+      "entropy": 11.50062777919745,
+      "ess": 95996.91026235251,
+      "ess_fraction": 0.9599691026235251,
+      "finite_logw_fraction": 1.0,
+      "logw_span": 7.2100419998168945,
+      "logw_variance": 0.018378719099316494,
+      "max_weight": 0.00026295635998957706,
+      "num_samples": 100000.0,
+      "perplexity": 98777.76217460685,
+      "top_0p1_percent_mass": 0.004336549456888914,
+      "top_10_percent_mass": 0.12736407438619698,
+      "top_1_percent_mass": 0.02345957228254155
+    },
+    "weight_source": "weights",
+    "weight_transform": {
+      "affected_upper_percent": null,
+      "clip_mode": null,
+      "clip_percentile": null,
+      "formal_no_clip": true,
+      "removed_upper_percent": null,
+      "zero_weight_count": 0
+    },
+    "weighted": {
+      "basin_l1_error": 0.0009096598673948835,
+      "basin_mass": {
+        "center": 0.009499624864040365,
+        "lower_right": 0.03304836773570948,
+        "upper_left": 0.95745200740025
+      },
+      "energy_mean": -11.436279878559457,
+      "energy_mean_error": 0.0014325135212001072,
+      "exact_basin_mass": {
+        "center": 0.009044794930342883,
+        "lower_right": 0.03340007480494476,
+        "upper_left": 0.9575551302647122
+      },
+      "exact_energy_mean": -11.437712392080657,
+      "in_domain_mass": 1.0,
+      "js_2d": 0.0076561886282297785,
+      "pmf_rmse": 1.7104148455867039
+    }
+  }
+}

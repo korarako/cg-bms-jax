@@ -1,0 +1,22 @@
+{
+  "clip": null,
+  "curve_points": 2361,
+  "curve_sampling": "deterministic_log_spaced_indices_plus_endpoints",
+  "ess": 95996.90455559544,
+  "ess_fraction": 0.9599690455559544,
+  "formal": true,
+  "formal_no_clip": true,
+  "included_sample_fraction": 1.0,
+  "logw_span": 7.210042476654053,
+  "logw_variance": 0.018378718821847502,
+  "max_weight": 0.00026295636780560017,
+  "maximum_logw_raw_formula_difference": 4.76837158203125e-07,
+  "maximum_weight_difference_from_raw_softmax": 1.3586576162087985e-10,
+  "normalization": "softmax(recomputed raw formula) over finite valid/support samples",
+  "num_generated_samples": 100000,
+  "raw_formula": "-target_reduced_energy-logq_ambient",
+  "support_mask_fraction": 1.0,
+  "top_0p1_percent_mass": 0.004336549585786997,
+  "top_1_percent_mass": 0.02345957297984569,
+  "valid_mask_fraction": 1.0
+}

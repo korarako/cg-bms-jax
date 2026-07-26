@@ -1,0 +1,62 @@
+name: mb2d_analytic_equilibrium_bridge
+state_shape: [2]
+dimension: 2
+# The reduced target is beta * U. Runtime enforces kT == 1 / beta.
+kT: 1.0
+coordinate_mode: mb2d_affine
+
+# Controller state z is standardized; the analytic potential is evaluated at
+# physical xy = offset + scale * z.
+affine:
+  offset: [25.0, 25.0]
+  scale: [10.0, 10.0]
+
+target:
+  beta: 1.0
+  box:
+    - [0.0, 50.0]
+    - [0.0, 50.0]
+  confinement:
+    # Physical-coordinate units. The flat-bottom wall starts this far before
+    # each formal boundary and remains restoring outside formal support.
+    margin: [2.5, 2.5]
+    strength: 1.0
+    # Bounded C2 continuation used only when a rollout leaves the formal box.
+    extension_width: [2.5, 2.5]
+
+# Exact equilibrium endpoints for the same analytic target above. The dataset
+# is generated once with cg-bms-generate-mb2d-equilibrium and is never
+# regenerated implicitly by a formal training runner. Its content digest is a
+# Keeping this in a separate experiment config prevents legacy checkpoints
+# trained on the deliberately biased synthetic mixture from being relabelled
+# or loaded as equilibrium-data checkpoints.
+bridge_data:
+  schema_version: 1
+  distribution: equilibrium_endpoint_npz_v1
+  coordinate_space: state
+  path: data/mb2d_equilibrium_exact_v1/endpoints.npz
+  sha256: f4c43d8feff619102e5cc1f8ad2dbd422d9a201453d356d4f59e48cb9032347d
+  split: train
+  num_endpoints: 100000
+  target_beta: 1.0
+
+source:
+  mean: 0.0
+  sigma: 1.0
+model:
+  kind: mlp
+  hidden_dims: [128, 128, 128]
+  time_embedding_dim: 32
+sde:
+  sigma_min: 0.01
+  sigma_max: 3.0
+  rho: 7.0
+  steps: 100
+training:
+  outer_iterations: 100
+  rollout_samples: 20000
+  buffer_capacity: 100000
+  batch_size: 1024
+  gradient_steps: 1000
+  learning_rate: 1.0e-4
+  damping: 10.0

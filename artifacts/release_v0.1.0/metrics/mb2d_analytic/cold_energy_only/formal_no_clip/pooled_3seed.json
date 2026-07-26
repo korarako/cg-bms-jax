@@ -1,0 +1,170 @@
+{
+  "estimator": {
+    "clip": null,
+    "formal": true,
+    "pooling": "equal seed mass for visualization; per-seed metrics remain authoritative"
+  },
+  "metrics": {
+    "energy_plot_view": {
+      "display_only": true,
+      "exact": {
+        "above_view_mass": 0.003622892093059334,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.003622892093059334,
+        "visible_mass": 0.9963771079069403
+      },
+      "exact_curve_smoothing": {
+        "display_only": true,
+        "formal_metrics_unchanged": true,
+        "mass_preserved": true,
+        "method": "gaussian_kernel_on_histogram_bins",
+        "sigma_bins": 2.0
+      },
+      "formal_no_clip": true,
+      "histogram_bins": 240,
+      "limits": [
+        -13.030936339766818,
+        -5.31841609196181
+      ],
+      "lower_quantile": 0.005,
+      "padding_fraction": 0.05,
+      "proposal": {
+        "above_view_mass": 0.016630000000000002,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.016630000000000002,
+        "visible_mass": 0.9833700000000003
+      },
+      "reweighted": {
+        "above_view_mass": 0.0032636645628115425,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.0032636645628115425,
+        "visible_mass": 0.9967363354371885
+      },
+      "sample_usage": "all",
+      "upper_quantile": 0.995
+    },
+    "num_samples": 300000,
+    "plot_style": {
+      "density_rendering": "filled_with_outline",
+      "fes_colormap": "viridis",
+      "fill_alpha": {
+        "proposal": 0.56,
+        "reference": 0.52,
+        "reweighted": 0.58
+      },
+      "palette": {
+        "exact": "#000000",
+        "implicit_reference": "#9467BD",
+        "proposal": "#F2A174",
+        "reference": "#8FD18B",
+        "reweighted_fill": "#B9CBEA",
+        "reweighted_outline": "#4472C4"
+      },
+      "two_dimensional_panels": "standalone_no_overlay"
+    },
+    "pooling": {
+      "affected_upper_percent": null,
+      "all_samples_used": true,
+      "clip_mode": null,
+      "clip_percentile": null,
+      "clip_scope": null,
+      "formal_metrics_authority": "per_seed_archives",
+      "kind": "equal_seed_stratified_visualization",
+      "labels": [
+        "seed0",
+        "seed1",
+        "seed2"
+      ],
+      "removed_upper_percent": null,
+      "sample_counts": [
+        100000,
+        100000,
+        100000
+      ],
+      "total_samples": 300000
+    },
+    "target": {
+      "beta": 1.0,
+      "bins": [
+        160,
+        160
+      ],
+      "domain": [
+        [
+          0.0,
+          50.0
+        ],
+        [
+          0.0,
+          50.0
+        ]
+      ],
+      "kT": 1.0,
+      "kind": "analytic_muller_brown_2d"
+    },
+    "unweighted": {
+      "basin_l1_error": 0.15923026052942435,
+      "basin_mass": {
+        "center": 0.04678333333333333,
+        "lower_right": 0.07527666666666666,
+        "upper_left": 0.8779400000000002
+      },
+      "energy_mean": -11.052152841384627,
+      "energy_mean_error": 0.3855595506960299,
+      "exact_basin_mass": {
+        "center": 0.009044794930342883,
+        "lower_right": 0.03340007480494476,
+        "upper_left": 0.9575551302647122
+      },
+      "exact_energy_mean": -11.437712392080657,
+      "in_domain_mass": 1.0,
+      "js_2d": 0.016769236665059112,
+      "pmf_rmse": 0.6420750433497545
+    },
+    "weight_diagnostics": {
+      "entropy": 12.532686620867064,
+      "ess": 236851.34371106105,
+      "ess_fraction": 0.7895044790368702,
+      "finite_logw_fraction": 1.0,
+      "logw_span": 12.186790551676754,
+      "logw_variance": 0.3772018001956477,
+      "max_weight": 0.0006324583500470785,
+      "num_samples": 300000.0,
+      "perplexity": 277253.2481842238,
+      "top_0p1_percent_mass": 0.0048009153534981875,
+      "top_10_percent_mass": 0.1583022099764174,
+      "top_1_percent_mass": 0.02225495743039624
+    },
+    "weight_source": "weights",
+    "weight_transform": {
+      "affected_upper_percent": null,
+      "clip_mode": null,
+      "clip_percentile": null,
+      "formal_no_clip": true,
+      "removed_upper_percent": null,
+      "scope": "pooled_formal_weights"
+    },
+    "weighted": {
+      "basin_l1_error": 0.000930352751828201,
+      "basin_mass": {
+        "center": 0.00917380057677725,
+        "lower_right": 0.032934898429030815,
+        "upper_left": 0.9578913009941921
+      },
+      "energy_mean": -11.438547094431321,
+      "energy_mean_error": -0.0008347023506640738,
+      "exact_basin_mass": {
+        "center": 0.009044794930342883,
+        "lower_right": 0.03340007480494476,
+        "upper_left": 0.9575551302647122
+      },
+      "exact_energy_mean": -11.437712392080657,
+      "in_domain_mass": 1.0,
+      "js_2d": 0.0021611933312929796,
+      "pmf_rmse": 0.597218410848466
+    }
+  }
+}

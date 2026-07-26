@@ -1,0 +1,351 @@
+{
+  "asset_manifest": {
+    "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/assets/manifest.yaml",
+    "role": "pinned_huggingface_asset_manifest",
+    "sha256": "6bae06858bf2e24b7897692d244d46e19cd70790c17d778795aebac21f5aea13",
+    "size_bytes": 1910
+  },
+  "assets": [
+    {
+      "manifest_path": "MB/pmf_b/flow_b/data.npz",
+      "manifest_repo_id": "bojuntum/CGPeptides",
+      "manifest_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+      "name": "mb_train",
+      "path": "/ds/project/weilong/ke/cg-bms-jax/assets/cache/MB/pmf_b/flow_b/data.npz",
+      "role": "asset:mb_train",
+      "sha256": "8151a89ffa8edebddedccb57f61b07e5540fad76f274d7362d2043e70b3f0e49",
+      "size_bytes": 280001024
+    },
+    {
+      "manifest_path": "MB/pmf_b/flow_b/energy_params.pkl",
+      "manifest_repo_id": "bojuntum/CGPeptides",
+      "manifest_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+      "name": "mb_pmf",
+      "path": "/ds/project/weilong/ke/cg-bms-jax/assets/cache/MB/pmf_b/flow_b/energy_params.pkl",
+      "role": "asset:mb_pmf",
+      "sha256": "e0a1dc4cc3bc85617dff697b01975e6c606e630b0cecbe9229ee0402473cda5b",
+      "size_bytes": 251585
+    },
+    {
+      "manifest_path": "MB/pmf_b/flow_ub/data.npz",
+      "manifest_repo_id": "bojuntum/CGPeptides",
+      "manifest_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+      "name": "mb_reference",
+      "path": "/ds/project/weilong/ke/cg-bms-jax/assets/cache/MB/pmf_b/flow_ub/data.npz",
+      "role": "asset:mb_reference",
+      "sha256": "3ce7b2bb33a16b55c7fa8228edb16cfc4795803fdabbeb4da1110cdaba89d5fb",
+      "size_bytes": 40000256
+    },
+    {
+      "manifest_path": "Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/data.npz",
+      "manifest_repo_id": "bojuntum/CGPeptides",
+      "manifest_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+      "name": "ala2_train",
+      "path": "/ds/project/weilong/ke/cg-bms-jax/assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/data.npz",
+      "role": "asset:ala2_train",
+      "sha256": "0512abedd691b05a865e832ce6f77ec49f75a051da7cd18168ed65384b2498c2",
+      "size_bytes": 135001484
+    },
+    {
+      "manifest_path": "Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/energy_params.pkl",
+      "manifest_repo_id": "bojuntum/CGPeptides",
+      "manifest_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+      "name": "ala2_pmf",
+      "path": "/ds/project/weilong/ke/cg-bms-jax/assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_b/energy_params.pkl",
+      "role": "asset:ala2_pmf",
+      "sha256": "2f855dd14408624aaf19caba4b128877f390eeb72718b0e634496ec4c5b9d45f",
+      "size_bytes": 432063
+    },
+    {
+      "manifest_path": "Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_ub/data.npz",
+      "manifest_repo_id": "bojuntum/CGPeptides",
+      "manifest_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+      "name": "ala2_reference",
+      "path": "/ds/project/weilong/ke/cg-bms-jax/assets/cache/Ac-Ala-NHMe/explicit/core_beta/pmf_b/flow_ub/data.npz",
+      "role": "asset:ala2_reference",
+      "sha256": "b71ef5e842c3f75527ac1006149e7c3545209472607d25a210027d9807af29fa",
+      "size_bytes": 137001722
+    },
+    {
+      "manifest_path": "Ac-Ala-NHMe/explicit/core_beta/ala2_core_beta.pdb",
+      "manifest_repo_id": "bojuntum/CGPeptides",
+      "manifest_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+      "name": "ala2_topology",
+      "path": "/ds/project/weilong/ke/cg-bms-jax/assets/cache/Ac-Ala-NHMe/explicit/core_beta/ala2_core_beta.pdb",
+      "role": "asset:ala2_topology",
+      "sha256": "64020cb5fe2719378186e46b5661711421a55d9e32d77fe3fa9cb9639a7e013d",
+      "size_bytes": 735
+    },
+    {
+      "manifest_path": "Ac-Ala-NHMe/implicit/data.npz",
+      "manifest_repo_id": "bojuntum/CGPeptides",
+      "manifest_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+      "name": "ala2_implicit_reference",
+      "path": "/ds/project/weilong/ke/cg-bms-jax/assets/cache/Ac-Ala-NHMe/implicit/data.npz",
+      "role": "asset:ala2_implicit_reference",
+      "sha256": "dc42a6395ca775be22e02ef421298194926fc0ae39d47f311e63982cd39881bf",
+      "size_bytes": 679002174
+    }
+  ],
+  "evaluation_code": [
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/scripts/build_cg_bms_jax_release.py",
+      "role": "release_evaluation_code",
+      "sha256": "3f03d7d8fc73f18fc46ab525b8f327ddfb7d79ef225e4e6808ef7ec45c82a87f",
+      "size_bytes": 141475
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/scripts/validate_release_scope.py",
+      "role": "release_evaluation_code",
+      "sha256": "9538eb066e611bd47fe79c4ad946414af7d33c60faf20dff4b39b3c021de0adf",
+      "size_bytes": 9734
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/__init__.py",
+      "role": "release_evaluation_code",
+      "sha256": "f081e3d8019bc699fa169dd5085b75e8b61f0f8bc34af0a804b79008f2ff49d7",
+      "size_bytes": 3292
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/ala2.py",
+      "role": "release_evaluation_code",
+      "sha256": "2f9a460f43eac6edc5315d235910208d1aade3678a20d730ea36ecb644a9b310",
+      "size_bytes": 27017
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/mb.py",
+      "role": "release_evaluation_code",
+      "sha256": "2423c4ea94a505e90ad9660e5860c581da8876a4acf5b79e15a82c514c7df497",
+      "size_bytes": 10778
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/mb2d.py",
+      "role": "release_evaluation_code",
+      "sha256": "16d8b1a89ba365d2d7a2a0d868bf9f7920ec89122c577d4420183fc34cbf14fe",
+      "size_bytes": 58124
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/metrics.py",
+      "role": "release_evaluation_code",
+      "sha256": "afa7729365f3d578424f5b68f1c8bc49ad9543e8c6e48bc7936266f7fffc88b2",
+      "size_bytes": 10358
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/plot_style.py",
+      "role": "release_evaluation_code",
+      "sha256": "67a76f624a1995fd64874b28ee955d4a0a176755cc9869cca9b4a7a477697477",
+      "size_bytes": 3183
+    }
+  ],
+  "experiment_configs": [
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/configs/experiment/ala2_cg_legacy_mixed_e100_release.yaml",
+      "role": "experiment_config",
+      "sha256": "d220ee0f16271f7ab5e5e17cefa11f6b3b1638391ff36ba5dd19455dc68a87cc",
+      "size_bytes": 3046
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/configs/experiment/ala2_cg_legacy_positive_release.yaml",
+      "role": "experiment_config",
+      "sha256": "867b1e86716e09d741c09363429b790fa89ed01480bbfa494b065d0bca8df3a2",
+      "size_bytes": 3385
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/configs/experiment/mb2d_analytic.yaml",
+      "role": "experiment_config",
+      "sha256": "3f5785183316d82590260f90fc3fd7860175e6ebf2323b054824cd0926a54b14",
+      "size_bytes": 2035
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/configs/experiment/mb2d_analytic_equilibrium_bridge.yaml",
+      "role": "experiment_config",
+      "sha256": "1e605aa9b276d484f043afdff72bf226b8c9ae61af99af6d47d3bd70f50ec12d",
+      "size_bytes": 1774
+    },
+    {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/configs/experiment/mb_cg1d.yaml",
+      "role": "experiment_config",
+      "sha256": "7471b00349a991b331dace3016f162d11a91d2385bb3c843ff1204e4ba1b4e86",
+      "size_bytes": 581
+    }
+  ],
+  "mb2d_equilibrium": {
+    "dataset_file": {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/data/mb2d_equilibrium_exact_v1/endpoints.npz",
+      "role": "exact_equilibrium_endpoint_dataset",
+      "sha256": "f4c43d8feff619102e5cc1f8ad2dbd422d9a201453d356d4f59e48cb9032347d",
+      "size_bytes": 4443890
+    },
+    "manifest": {
+      "affine_offset": [
+        25.0,
+        25.0
+      ],
+      "affine_scale": [
+        10.0,
+        10.0
+      ],
+      "cell_area_state": 2.384185791015625e-05,
+      "dataset_sha256": "f4c43d8feff619102e5cc1f8ad2dbd422d9a201453d356d4f59e48cb9032347d",
+      "distribution": "equilibrium_endpoint_npz_v1",
+      "experiment_identity": {
+        "coordinate_signature": "8a960952cb8c4fba9d20d82ae614a736fa3eddd54534a7a4cd6cd788d6fa07ed",
+        "formal_target_signature": "be7acb17830bf204ebbd97bf7283a7205061a6703b266978d9321033e0b6b023",
+        "name": "mb2d_analytic_equilibrium_bridge"
+      },
+      "generator_abi": "midpoint_categorical_uniform_jitter_v1",
+      "grid_resolution": [
+        1024,
+        1024
+      ],
+      "kT": 1.0,
+      "num_samples": 250000,
+      "path": "data/mb2d_equilibrium_exact_v1/endpoints.npz",
+      "physical_box": [
+        [
+          0.0,
+          50.0
+        ],
+        [
+          0.0,
+          50.0
+        ]
+      ],
+      "rng_algorithm": "numpy.random.Generator(PCG64)",
+      "seed": 20260725,
+      "split_counts": {
+        "test": 100000,
+        "train": 100000,
+        "validation": 50000
+      },
+      "split_sha256": {
+        "test": "7cb6a132078fef5536d6ab3cac866aa1690d3fdd778533b15ee70e3c0e2383d1",
+        "train": "a9da4651d676ddbf7ce767ecddecc37e5e3c99f1ce27aa602f4fd1e85b10fbea",
+        "validation": "c3f7caa2f35a4a8bbd7db1c76fe40e3437848440c017eb88d06efe10840b9cf6"
+      },
+      "target_beta": 1.0,
+      "target_signature": "2f082435437f9d397929495b1d5aaae9e866c48faf0c37921d6ad6f674419fce",
+      "validation": {
+        "accepted": true,
+        "basin_l1_error": 0.0002714613608035786,
+        "basin_mass": {
+          "center": 0.0089,
+          "lower_right": 0.03355,
+          "upper_left": 0.95755
+        },
+        "energy_mean": -11.435217020117335,
+        "energy_mean_error": 0.0024953358376134105,
+        "exact_basin_mass": {
+          "center": 0.009031707604093801,
+          "lower_right": 0.033414269319598316,
+          "upper_left": 0.9575540230763081
+        },
+        "exact_energy_mean": -11.437712355954949,
+        "grid_convergence": {
+          "basin_l1_delta": 1.560449098906777e-06,
+          "coarse": {
+            "basin_mass": {
+              "center": 0.009041327923519218,
+              "lower_right": 0.03340358899062933,
+              "upper_left": 0.9575550830858518
+            },
+            "bins": 512,
+            "energy_mean": -11.437712434949422
+          },
+          "energy_mean_abs_delta": 3.5253151509095915e-09,
+          "fine": {
+            "basin_mass": {
+              "center": 0.009040547698969384,
+              "lower_right": 0.03340436426950065,
+              "upper_left": 0.9575550880315296
+            },
+            "bins": 1024,
+            "energy_mean": -11.437712438474737
+          }
+        },
+        "histogram_bins": 120,
+        "histogram_js": 0.003954964853153553,
+        "histogram_tv": 0.03230332697458669,
+        "maximum_basin_l1": 0.02,
+        "maximum_grid_basin_l1": 0.002,
+        "maximum_grid_energy_mean_delta": 0.01,
+        "maximum_histogram_js": 0.04
+      }
+    },
+    "manifest_file": {
+      "path": "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/data/mb2d_equilibrium_exact_v1/endpoints.manifest.json",
+      "role": "exact_equilibrium_endpoint_manifest",
+      "sha256": "fe60d25e80e1ebcb4f0e986bb2b36bccf790f6982bada795d43155e702384d4c",
+      "size_bytes": 2775
+    }
+  },
+  "schema_version": 1,
+  "visual_contract": {
+    "ala2_ramachandran": {
+      "panels": [
+        "reference",
+        "proposal",
+        "reweighted"
+      ],
+      "rendering": "standalone_no_overlay"
+    },
+    "exact_or_true_rendering": "black_line_only",
+    "fill_style": {
+      "exact_or_true": {
+        "alpha": 1.0,
+        "edgecolor": "#000000",
+        "facecolor": null,
+        "rendering": "line_only"
+      },
+      "proposal": {
+        "alpha": 0.56,
+        "edgecolor": "#F2A174",
+        "facecolor": "#F2A174",
+        "rendering": "filled_with_outline"
+      },
+      "reference": {
+        "alpha": 0.52,
+        "edgecolor": "#8FD18B",
+        "facecolor": "#8FD18B",
+        "rendering": "filled_with_outline"
+      },
+      "reweighted": {
+        "alpha": 0.58,
+        "edgecolor": "#4472C4",
+        "facecolor": "#B9CBEA",
+        "rendering": "filled_with_outline"
+      }
+    },
+    "mb2d_fes": {
+      "colorbar_label": "Free energy",
+      "colormap": "viridis",
+      "physical_limits": [
+        [
+          0.0,
+          50.0
+        ],
+        [
+          0.0,
+          50.0
+        ]
+      ],
+      "vmax_kT": 12.0,
+      "vmin": 0.0
+    },
+    "one_dimensional_density_rendering": "filled_with_outline",
+    "palette": {
+      "exact_or_true": "#000000",
+      "proposal": "#F2A174",
+      "reference": "#8FD18B",
+      "reweighted": "#4472C4",
+      "reweighted_fill": "#B9CBEA"
+    },
+    "source_files": {
+      "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/ala2.py": "2f9a460f43eac6edc5315d235910208d1aade3678a20d730ea36ecb644a9b310",
+      "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/mb.py": "2423c4ea94a505e90ad9660e5860c581da8876a4acf5b79e15a82c514c7df497",
+      "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/mb2d.py": "16d8b1a89ba365d2d7a2a0d868bf9f7920ec89122c577d4420183fc34cbf14fe",
+      "/ds/project/weilong/ke/cg-bms-jax-release-build-v5/src/cg_bms_jax/evaluation/plot_style.py": "67a76f624a1995fd64874b28ee955d4a0a176755cc9869cca9b4a7a477697477"
+    },
+    "verification": "PASS"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "required_exclusion": "ala2_all_atom",
+  "required_families": [
+    "mb_cg1d",
+    "mb2d_analytic",
+    "ala2_cg"
+  ],
+  "validated_before_atomic_publish": true,
+  "validator": "scripts/validate_release_scope.py",
+  "validator_sha256": "9538eb066e611bd47fe79c4ad946414af7d33c60faf20dff4b39b3c021de0adf"
+}

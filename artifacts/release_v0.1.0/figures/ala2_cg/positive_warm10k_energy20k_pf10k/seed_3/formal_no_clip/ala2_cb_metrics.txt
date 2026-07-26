@@ -1,0 +1,50 @@
+[plot_style]
+palette: {'exact': '#000000', 'reference': '#8FD18B', 'proposal': '#F2A174', 'reweighted_outline': '#4472C4', 'reweighted_fill': '#B9CBEA', 'implicit_reference': '#9467BD'}
+fill_alpha: {'reference': 0.52, 'proposal': 0.56, 'reweighted': 0.58}
+density_rendering: filled_with_outline
+fes_colormap: viridis
+two_dimensional_panels: standalone_no_overlay
+
+[weight_source]
+weights
+
+[unweighted_direct]
+JS_Divergence: 0.11446891341760579
+PMF_Error: 10.281423532251342
+ESS_Percent: 1.0
+
+[unweighted_bootstrap]
+JS_Divergence: {'mean': 0.14437891314597545, 'std': 0.0023465324932324147}
+PMF_Error: {'mean': 16.06189214174465, 'std': 0.5682484748444244}
+ESS_Percent: {'mean': 1.0, 'std': 0.0}
+
+[energy_plot_view]
+display_only: True
+sample_usage: all
+lower_quantile: 0.005
+upper_quantile: 0.995
+limits: [-311.37027435302736, -275.930354309082]
+reference_outside_fraction: 0.003781992436015128
+implicit_outside_fraction: None
+proposal_outside_fraction: 0.1394
+reweighted_outside_fraction: 0.07268463430382155
+
+[weighted_direct]
+JS_Divergence: 0.08790117845539949
+PMF_Error: 5.993848507926312
+ESS_Percent: 0.1355540737683059
+
+[weighted_bootstrap]
+JS_Divergence: {'mean': 0.11841371139763765, 'std': 0.0017722918998115613}
+PMF_Error: {'mean': 15.461960216864622, 'std': 0.5167479851700582}
+ESS_Percent: {'mean': 0.1355540737683059, 'std': 0.0}
+
+[max_weight]
+0.008043825771128551
+
+[logw_variance]
+59.037083796290226
+
+[energy_wasserstein]
+W1: 7.933065591381114
+W2: 22.04794457323453

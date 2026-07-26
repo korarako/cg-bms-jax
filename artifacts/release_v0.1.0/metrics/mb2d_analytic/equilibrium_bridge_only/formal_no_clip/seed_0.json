@@ -1,0 +1,150 @@
+{
+  "estimator": {
+    "clip": null,
+    "density_mode": "ambient_exact",
+    "formal": true,
+    "raw_formula": "-target_reduced_energy-logq_ambient"
+  },
+  "metrics": {
+    "energy_plot_view": {
+      "display_only": true,
+      "exact": {
+        "above_view_mass": 0.003622892093059334,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.003622892093059334,
+        "visible_mass": 0.9963771079069403
+      },
+      "exact_curve_smoothing": {
+        "display_only": true,
+        "formal_metrics_unchanged": true,
+        "mass_preserved": true,
+        "method": "gaussian_kernel_on_histogram_bins",
+        "sigma_bins": 2.0
+      },
+      "formal_no_clip": true,
+      "histogram_bins": 240,
+      "limits": [
+        -13.030936339766818,
+        -5.31841609196181
+      ],
+      "lower_quantile": 0.005,
+      "padding_fraction": 0.05,
+      "proposal": {
+        "above_view_mass": 0.005750000000000001,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.005750000000000001,
+        "visible_mass": 0.9942500000000001
+      },
+      "reweighted": {
+        "above_view_mass": 0.0036449594204699424,
+        "below_view_mass": 0.0,
+        "nonfinite_mass": 0.0,
+        "out_of_view_mass": 0.0036449594204699424,
+        "visible_mass": 0.9963550405795302
+      },
+      "sample_usage": "all",
+      "upper_quantile": 0.995
+    },
+    "num_samples": 100000,
+    "plot_style": {
+      "density_rendering": "filled_with_outline",
+      "fes_colormap": "viridis",
+      "fill_alpha": {
+        "proposal": 0.56,
+        "reference": 0.52,
+        "reweighted": 0.58
+      },
+      "palette": {
+        "exact": "#000000",
+        "implicit_reference": "#9467BD",
+        "proposal": "#F2A174",
+        "reference": "#8FD18B",
+        "reweighted_fill": "#B9CBEA",
+        "reweighted_outline": "#4472C4"
+      },
+      "two_dimensional_panels": "standalone_no_overlay"
+    },
+    "target": {
+      "beta": 1.0,
+      "bins": [
+        160,
+        160
+      ],
+      "domain": [
+        [
+          0.0,
+          50.0
+        ],
+        [
+          0.0,
+          50.0
+        ]
+      ],
+      "kT": 1.0,
+      "kind": "analytic_muller_brown_2d"
+    },
+    "unweighted": {
+      "basin_l1_error": 0.008729739470575463,
+      "basin_mass": {
+        "center": 0.008740000000000001,
+        "lower_right": 0.02934,
+        "upper_left": 0.96192
+      },
+      "energy_mean": -11.39582875922416,
+      "energy_mean_error": 0.04188363285649643,
+      "exact_basin_mass": {
+        "center": 0.009044794930342883,
+        "lower_right": 0.03340007480494476,
+        "upper_left": 0.9575551302647122
+      },
+      "exact_energy_mean": -11.437712392080657,
+      "in_domain_mass": 1.0,
+      "js_2d": 0.0074684784778676315,
+      "pmf_rmse": 1.475784558880153
+    },
+    "weight_diagnostics": {
+      "entropy": 11.507861626842708,
+      "ess": 99067.39918807142,
+      "ess_fraction": 0.9906739918807141,
+      "finite_logw_fraction": 1.0,
+      "logw_span": 5.9127421379089355,
+      "logw_variance": 0.022232495364592954,
+      "max_weight": 2.6620947528713873e-05,
+      "num_samples": 100000.0,
+      "perplexity": 99494.89614865981,
+      "top_0p1_percent_mass": 0.002138947719221627,
+      "top_10_percent_mass": 0.1122573061336698,
+      "top_1_percent_mass": 0.014874769778052885
+    },
+    "weight_source": "weights",
+    "weight_transform": {
+      "affected_upper_percent": null,
+      "clip_mode": null,
+      "clip_percentile": null,
+      "formal_no_clip": true,
+      "removed_upper_percent": null,
+      "zero_weight_count": 0
+    },
+    "weighted": {
+      "basin_l1_error": 0.0008557726178063108,
+      "basin_mass": {
+        "center": 0.009472681239246073,
+        "lower_right": 0.03331716220060163,
+        "upper_left": 0.9572101565601522
+      },
+      "energy_mean": -11.434485111739278,
+      "energy_mean_error": 0.0032272803413793127,
+      "exact_basin_mass": {
+        "center": 0.009044794930342883,
+        "lower_right": 0.03340007480494476,
+        "upper_left": 0.9575551302647122
+      },
+      "exact_energy_mean": -11.437712392080657,
+      "in_domain_mass": 1.0,
+      "js_2d": 0.006239655877584599,
+      "pmf_rmse": 1.4742844838492255
+    }
+  }
+}

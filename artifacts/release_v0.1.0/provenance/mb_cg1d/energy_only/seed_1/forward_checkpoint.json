@@ -1,0 +1,89 @@
+{
+  "copied": false,
+  "manifest": {
+    "config": {
+      "assets": {
+        "pmf": "assets/cache/MB/pmf_b/flow_b/energy_params.pkl",
+        "reference": "assets/cache/MB/pmf_b/flow_ub/data.npz",
+        "train": "assets/cache/MB/pmf_b/flow_b/data.npz"
+      },
+      "coordinate_mode": "identity",
+      "dimension": 1,
+      "kT": 1.0,
+      "model": {
+        "hidden_dims": [
+          128,
+          128,
+          128
+        ],
+        "kind": "mlp",
+        "time_embedding_dim": 32
+      },
+      "name": "mb_cg1d",
+      "sde": {
+        "rho": 7.0,
+        "sigma_max": 10.0,
+        "sigma_min": 0.01,
+        "steps": 100
+      },
+      "source": {
+        "mean": 25.0,
+        "sigma": 25.0
+      },
+      "state_shape": [
+        1
+      ],
+      "training": {
+        "batch_size": 1024,
+        "buffer_capacity": 100000,
+        "damping": 10.0,
+        "gradient_steps": 1000,
+        "learning_rate": 0.0001,
+        "outer_iterations": 100,
+        "rollout_samples": 20000
+      }
+    },
+    "format": "cg-bms-jax-orbax",
+    "format_version": 1,
+    "metadata": {
+      "assets": {
+        "coordinate_unit": "reduced_mb_coordinate",
+        "correction_mode": "exact_ambient",
+        "density_mode": "ambient_1d",
+        "domain": "real_line",
+        "mapping_indices": [
+          0
+        ],
+        "mapping_name": "mb_cg1d_identity",
+        "num_particles": 1,
+        "pmf_revision": "39765bbcfee382e5f30445589d7fe28ebb6cfff8",
+        "pmf_sha256": "e0a1dc4cc3bc85617dff697b01975e6c606e630b0cecbe9229ee0402473cda5b",
+        "spatial_dimension": 1,
+        "standardization_std": 1.0,
+        "temperature_kelvin": 1.0,
+        "thermal_energy_kj_mol": 1.0
+      },
+      "code_revision": "cg-bms-jax-0.1.0a0+working-tree",
+      "config_sha256": "d57e4bc6a044c3280baa74c3543b06e25ffed4bafc3956c414b85db11a19e561",
+      "coordinate_signature": "760a8cdb00ed0eed5e6f235aa6950371d50b52f100e8c35b5fcabe23812e831b",
+      "created_at_utc": "2026-07-24T20:53:59.065858+00:00",
+      "formal_target_signature": null,
+      "global_step": 100000,
+      "initial_controller_path": null,
+      "initial_controller_role": null,
+      "initial_controller_sha256": null,
+      "model_signature": "2121f17c9c13d148bea1977ac7c693ef621bc1f540f112f5af19b4766f866cbe",
+      "parent_forward_sha256": null,
+      "role": "forward",
+      "schema_version": 1,
+      "sde_signature": "a26d6805157f322a3950479f25409968aa17e9516a341cf3dd18dc5a70c73474",
+      "species_signature": "d0bca111f8628137adc4c16f123496dcdd1d590d06cb5d9acd68b39fe656fb97",
+      "topology_signature": null,
+      "training_data_sha256": "8151a89ffa8edebddedccb57f61b07e5540fad76f274d7362d2043e70b3f0e49",
+      "training_target_signature": null,
+      "warmstart_data_sha256": null
+    }
+  },
+  "sha256": "e339272d161df933a6fbe5c48197ebece8875b0e4fa315c80c577326d15cc742",
+  "source_path": "/ds/project/weilong/ke/cg-bms-jax/outputs/mb_cg1d_three_seed_20260724_run1/seed_1/forward/forward_step_00100000"
+}

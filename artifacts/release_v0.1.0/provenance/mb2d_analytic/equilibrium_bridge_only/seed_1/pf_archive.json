@@ -1,0 +1,358 @@
+{
+  "arrays": {
+    "R": {
+      "dtype": "float32",
+      "shape": [
+        100000,
+        2
+      ]
+    },
+    "U": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "U_confinement": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "U_muller_brown": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "U_target": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "X_standardized": {
+      "dtype": "float32",
+      "shape": [
+        100000,
+        2
+      ]
+    },
+    "density_mode": {
+      "dtype": "<U13",
+      "shape": []
+    },
+    "initial_X": {
+      "dtype": "float32",
+      "shape": [
+        100000,
+        2
+      ]
+    },
+    "initial_logq": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "logp": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "logq_ambient": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "logw": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "logw_raw": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "metadata_json": {
+      "dtype": "<U5811",
+      "shape": []
+    },
+    "ode_steps_per_batch": {
+      "dtype": "int64",
+      "shape": [
+        98
+      ]
+    },
+    "sampler_kind": {
+      "dtype": "<U6",
+      "shape": []
+    },
+    "support_mask": {
+      "dtype": "bool",
+      "shape": [
+        100000
+      ]
+    },
+    "target_reduced_energy": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    },
+    "valid_mask": {
+      "dtype": "bool",
+      "shape": [
+        100000
+      ]
+    },
+    "weights": {
+      "dtype": "float32",
+      "shape": [
+        100000
+      ]
+    }
+  },
+  "controller_kind_audit": {
+    "accepted_legacy_absence_requires_checkpoint_sha_and_metadata_match": true,
+    "archive_field": "forward_pretrain",
+    "checkpoint_role": "forward_pretrain",
+    "schema_status": "field_present"
+  },
+  "copied": false,
+  "density_mode": "ambient_exact",
+  "endpoint_metadata_audit": {
+    "accepted_missing_fields_require_checkpoint_data_linkage": true,
+    "missing_fields": [],
+    "present_fields": [
+      "endpoint_distribution",
+      "configured_endpoint_spec_sha256",
+      "synthetic_endpoint_spec_sha256",
+      "equilibrium_endpoint_spec_sha256"
+    ],
+    "schema_status": "all_fields_present"
+  },
+  "metadata": {
+    "backward_checkpoint_sha256": "c9065bb721d0ceafaacf2555d59d76f8ebe039160000d7c5d43897fa6ef601cf",
+    "backward_metadata": {
+      "assets": {
+        "coordinate_unit": "cg_bg_mb_coordinate",
+        "correction_mode": "exact_ambient",
+        "density_mode": "ambient_2d",
+        "domain": "finite_cartesian_box",
+        "mapping_indices": [
+          0,
+          1
+        ],
+        "mapping_name": "mb2d_affine",
+        "num_particles": 1,
+        "pmf_revision": "analytic_muller_brown_finite_box_v1",
+        "pmf_sha256": "be7acb17830bf204ebbd97bf7283a7205061a6703b266978d9321033e0b6b023",
+        "spatial_dimension": 2,
+        "standardization_std": 10.0,
+        "temperature_kelvin": 1.0,
+        "thermal_energy_kj_mol": 1.0
+      },
+      "code_revision": "cg-bms-jax-0.1.0a0+working-tree",
+      "config_sha256": "8b7a259cfca10cbd3474deffca0a33e5316bd41bc1c21803ddb9cad6218b0ad6",
+      "coordinate_signature": "8a960952cb8c4fba9d20d82ae614a736fa3eddd54534a7a4cd6cd788d6fa07ed",
+      "created_at_utc": "2026-07-25T22:58:06.009244+00:00",
+      "formal_target_signature": "be7acb17830bf204ebbd97bf7283a7205061a6703b266978d9321033e0b6b023",
+      "global_step": 100000,
+      "initial_controller_path": null,
+      "initial_controller_role": null,
+      "initial_controller_sha256": null,
+      "model_signature": "2121f17c9c13d148bea1977ac7c693ef621bc1f540f112f5af19b4766f866cbe",
+      "parent_forward_sha256": "a696828ed7a15692f8fe22f8f26c6c1466ac897c205949e53a61c656013a813f",
+      "role": "backward",
+      "schema_version": 2,
+      "sde_signature": "669eb501d055ec746c45f6d4246de324f1dd54073c32569c16b670acc734e950",
+      "species_signature": "01f650e85c95620160b40ed22626dca932e9f700ffe599be060da184dd4d7822",
+      "topology_signature": "00c30a29d7f26aa0414dc21fa9896757f82d364f236e220a3a232415d17638c8",
+      "training_data_sha256": "6888168a0b087bd325cbfcd87eafa39614b52dda2c5d03747ab106c69906d0c5",
+      "training_target_signature": "c0ae56dff390b78c46d8d183d5529058350b1504a9b7ac8de3c11156ef8e0083",
+      "warmstart_data_sha256": "6888168a0b087bd325cbfcd87eafa39614b52dda2c5d03747ab106c69906d0c5"
+    },
+    "beta": 1.0,
+    "configured_endpoint_spec_sha256": "6888168a0b087bd325cbfcd87eafa39614b52dda2c5d03747ab106c69906d0c5",
+    "coordinate_mode": "mb2d_affine",
+    "coordinate_signature": "8a960952cb8c4fba9d20d82ae614a736fa3eddd54534a7a4cd6cd788d6fa07ed",
+    "density_mode": "ambient_exact",
+    "domain": {
+      "anchor": 0,
+      "box": [
+        [
+          0.0,
+          50.0
+        ],
+        [
+          0.0,
+          50.0
+        ]
+      ],
+      "lower": [
+        0.0,
+        0.0
+      ],
+      "margin": [
+        2.5,
+        2.5
+      ],
+      "support_mode": "cartesian_box",
+      "upper": [
+        50.0,
+        50.0
+      ]
+    },
+    "endpoint_distribution": "equilibrium_endpoint_npz_v1",
+    "equilibrium_endpoint_spec_sha256": "6888168a0b087bd325cbfcd87eafa39614b52dda2c5d03747ab106c69906d0c5",
+    "event_shape": [
+      2
+    ],
+    "experiment_family": "mb2d_analytic",
+    "formal_target_signature": "be7acb17830bf204ebbd97bf7283a7205061a6703b266978d9321033e0b6b023",
+    "forward_checkpoint_sha256": "a696828ed7a15692f8fe22f8f26c6c1466ac897c205949e53a61c656013a813f",
+    "forward_controller_kind": "forward_pretrain",
+    "forward_metadata": {
+      "assets": {
+        "coordinate_unit": "cg_bg_mb_coordinate",
+        "correction_mode": "exact_ambient",
+        "density_mode": "ambient_2d",
+        "domain": "finite_cartesian_box",
+        "mapping_indices": [
+          0,
+          1
+        ],
+        "mapping_name": "mb2d_affine",
+        "num_particles": 1,
+        "pmf_revision": "analytic_muller_brown_finite_box_v1",
+        "pmf_sha256": "be7acb17830bf204ebbd97bf7283a7205061a6703b266978d9321033e0b6b023",
+        "spatial_dimension": 2,
+        "standardization_std": 10.0,
+        "temperature_kelvin": 1.0,
+        "thermal_energy_kj_mol": 1.0
+      },
+      "code_revision": "cg-bms-jax-0.1.0a0+working-tree",
+      "config_sha256": "72b92b4267066995db8ce4f4f5e99fd4eedbec955e6d71b2b196e9ee8223844b",
+      "coordinate_signature": "8a960952cb8c4fba9d20d82ae614a736fa3eddd54534a7a4cd6cd788d6fa07ed",
+      "created_at_utc": "2026-07-25T22:38:54.320623+00:00",
+      "formal_target_signature": "be7acb17830bf204ebbd97bf7283a7205061a6703b266978d9321033e0b6b023",
+      "global_step": 100000,
+      "initial_controller_path": null,
+      "initial_controller_role": null,
+      "initial_controller_sha256": null,
+      "model_signature": "2121f17c9c13d148bea1977ac7c693ef621bc1f540f112f5af19b4766f866cbe",
+      "parent_forward_sha256": null,
+      "role": "forward_pretrain",
+      "schema_version": 2,
+      "sde_signature": "669eb501d055ec746c45f6d4246de324f1dd54073c32569c16b670acc734e950",
+      "species_signature": "01f650e85c95620160b40ed22626dca932e9f700ffe599be060da184dd4d7822",
+      "topology_signature": "00c30a29d7f26aa0414dc21fa9896757f82d364f236e220a3a232415d17638c8",
+      "training_data_sha256": "6888168a0b087bd325cbfcd87eafa39614b52dda2c5d03747ab106c69906d0c5",
+      "training_target_signature": "c0ae56dff390b78c46d8d183d5529058350b1504a9b7ac8de3c11156ef8e0083",
+      "warmstart_data_sha256": "6888168a0b087bd325cbfcd87eafa39614b52dda2c5d03747ab106c69906d0c5"
+    },
+    "hard_support_uses_wall_margin": false,
+    "likelihood": {
+      "atol": 1e-06,
+      "divergence": "exact",
+      "dt0": 0.001,
+      "dtype": "float32",
+      "max_steps": 16384,
+      "pf_stage": "/ds/project/weilong/ke/cg-bms-jax/outputs/mb2d_equilibrium_bridge_matrix_v1/seed_1/equilibrium_bridge_only_pf100000.pf_stage.npz",
+      "rtol": 1e-05,
+      "solver": "dopri5",
+      "t0": 0.0,
+      "t1": 1.0,
+      "target_batch_size": 1024
+    },
+    "model_signature": "2121f17c9c13d148bea1977ac7c693ef621bc1f540f112f5af19b4766f866cbe",
+    "physical_box": [
+      [
+        0.0,
+        50.0
+      ],
+      [
+        0.0,
+        50.0
+      ]
+    ],
+    "pmf_revision": "analytic_muller_brown_finite_box_v1",
+    "pmf_sha256": "be7acb17830bf204ebbd97bf7283a7205061a6703b266978d9321033e0b6b023",
+    "sampler_kind": "pf_ode",
+    "sde_signature": "669eb501d055ec746c45f6d4246de324f1dd54073c32569c16b670acc734e950",
+    "seed": 201,
+    "species_signature": "01f650e85c95620160b40ed22626dca932e9f700ffe599be060da184dd4d7822",
+    "state_box": {
+      "lower": [
+        -2.5,
+        -2.5
+      ],
+      "upper": [
+        2.5,
+        2.5
+      ]
+    },
+    "synthetic_endpoint_spec_sha256": null,
+    "target_implementation_abi": "analytic_muller_brown_finite_box_v1",
+    "target_mode": "analytic_mb2d",
+    "target_signature": "be7acb17830bf204ebbd97bf7283a7205061a6703b266978d9321033e0b6b023",
+    "target_terms": [
+      "analytic_muller_brown"
+    ],
+    "topology_signature": "00c30a29d7f26aa0414dc21fa9896757f82d364f236e220a3a232415d17638c8",
+    "training_data_sha256": "6888168a0b087bd325cbfcd87eafa39614b52dda2c5d03747ab106c69906d0c5",
+    "training_target_signature": "c0ae56dff390b78c46d8d183d5529058350b1504a9b7ac8de3c11156ef8e0083",
+    "training_target_terms": [
+      "analytic_muller_brown",
+      "finite_box_confinement"
+    ],
+    "training_wall_in_formal_target": false
+  },
+  "no_clip_audit": {
+    "ess": 98488.81360908183,
+    "ess_fraction": 0.9848881360908183,
+    "formal_no_clip": true,
+    "included_sample_fraction": 1.0,
+    "logw_span": 7.055301785469055,
+    "logw_variance": 0.02310202105070057,
+    "max_weight": 9.042721649166197e-05,
+    "maximum_logw_raw_formula_difference": 4.76837158203125e-07,
+    "maximum_weight_difference_from_raw_softmax": 2.4327012884055137e-11,
+    "normalization": "softmax(recomputed raw formula) over finite valid/support samples",
+    "raw_formula": "-target_reduced_energy-logq_ambient",
+    "support_mask_fraction": 1.0,
+    "top_0p1_percent_mass": 0.0022375481839844724,
+    "top_1_percent_mass": 0.01715024407621968,
+    "valid_mask_fraction": 1.0
+  },
+  "sample_count": 100000,
+  "sampler_kind": "pf_ode",
+  "sampling_provenance_audit": {
+    "accepted_by": "archive sample count, event shape, per-sample array shape, PF seed, solver settings, checkpoint SHA-256, and complete archive SHA-256 locks",
+    "archive_sample_count": 100000,
+    "coordinate_shape": [
+      100000,
+      2
+    ],
+    "expected_sample_count": 100000,
+    "logq_ambient_shape": [
+      100000
+    ],
+    "schema_status": "legacy_mapping_absent",
+    "target_reduced_energy_shape": [
+      100000
+    ],
+    "weights_shape": [
+      100000
+    ]
+  },
+  "sha256": "c92c655d9f0090adf01a5895d4d9d3d58f2b03c0ed2d5da80157e9640a6c5f84",
+  "size_bytes": 5496464,
+  "source_path": "/ds/project/weilong/ke/cg-bms-jax/outputs/mb2d_equilibrium_bridge_matrix_v1/seed_1/equilibrium_bridge_only_pf100000.npz"
+}
