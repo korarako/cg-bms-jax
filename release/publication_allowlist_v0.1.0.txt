@@ -17,6 +17,7 @@ path pyproject.toml
 path README.md
 path THIRD_PARTY_NOTICES.md
 path UPSTREAM.md
+path release/publication_allowlist_v0.1.0.txt
 
 tree LICENSES
 tree src

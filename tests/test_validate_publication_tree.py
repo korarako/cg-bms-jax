@@ -88,12 +88,24 @@ def test_readme_link_gate_reports_missing_relative_target(tmp_path: Path) -> Non
     (tmp_path / "docs/good.md").write_text("ok\n", encoding="utf-8")
 
     errors = validator._validate_readme_links(tmp_path, {"README.md"})
-    assert errors == ["broken README link: docs/missing.md"]
+    assert errors == [
+        "README link target is excluded from publication: docs/good.md",
+        "broken README link: docs/missing.md",
+    ]
 
 
-def test_required_gate_requires_atomic_release_manifest() -> None:
-    errors = validator._validate_required({"README.md"})
+def test_final_required_gate_requires_atomic_release_manifest() -> None:
+    errors = validator._validate_required({"README.md"}, "final")
     assert any("artifacts/release_v0.1.0/MANIFEST.json" in error for error in errors)
+
+
+def test_source_required_gate_does_not_require_atomic_release_manifest() -> None:
+    files = set(validator.SOURCE_REQUIRED_FILES)
+    files.update(
+        f"{prefix}placeholder" for prefix in validator.SOURCE_REQUIRED_TREES
+    )
+    errors = validator._validate_required(files, "source")
+    assert not errors
 
 
 @pytest.mark.parametrize("suffix", [".tar", ".tgz", ".zip"])

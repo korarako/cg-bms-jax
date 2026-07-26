@@ -16,21 +16,20 @@ import re
 import subprocess
 import sys
 from collections.abc import Iterable
-from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from typing import NamedTuple
 
 DEFAULT_ALLOWLIST = Path("release/publication_allowlist_v0.1.0.txt")
 MAX_FILE_BYTES = 25 * 1024 * 1024
 TEXT_SCAN_BYTES = 2 * 1024 * 1024
 
-REQUIRED_FILES = frozenset(
+SOURCE_REQUIRED_FILES = frozenset(
     {
         ".gitattributes",
         ".gitignore",
         "CITATION.cff",
         "LICENSE",
         "README.md",
-        "artifacts/release_v0.1.0/MANIFEST.json",
         "assets/manifest.yaml",
         "data/mb2d_equilibrium_exact_v1/endpoints.manifest.json",
         "data/mb2d_equilibrium_exact_v1/endpoints.npz",
@@ -43,12 +42,15 @@ REQUIRED_FILES = frozenset(
         "scripts/validate_release_scope.py",
     }
 )
-REQUIRED_TREES = (
+FINAL_REQUIRED_FILES = frozenset({"artifacts/release_v0.1.0/MANIFEST.json"})
+SOURCE_REQUIRED_TREES = (
     "src/",
     "tests/",
     "configs/experiment/mb",
     "configs/experiment/ala2_ambient18",
     "configs/experiment/ala2_cg",
+)
+FINAL_REQUIRED_TREES = (
     "artifacts/release_v0.1.0/figures/",
     "artifacts/release_v0.1.0/metrics/",
     "artifacts/release_v0.1.0/parameters/",
@@ -70,6 +72,10 @@ FORBIDDEN_TOP_LEVEL = frozenset(
         "tmp",
     }
 )
+IGNORED_CANDIDATE_PARTS = frozenset(
+    {"__pycache__", ".mypy_cache", ".pytest_cache", ".ruff_cache"}
+)
+IGNORED_CANDIDATE_SUFFIXES = frozenset({".pyc", ".pyo"})
 FORBIDDEN_ARCHIVE_SUFFIXES = frozenset({".tar", ".tgz", ".zip"})
 FORBIDDEN_RUNTIME_SUFFIXES = frozenset(
     {".ckpt", ".log", ".orbax-checkpoint", ".pkl"}
@@ -124,8 +130,7 @@ class PublicationValidationError(RuntimeError):
     """Raised when the candidate publication violates the v0.1.0 contract."""
 
 
-@dataclass(frozen=True)
-class AllowRule:
+class AllowRule(NamedTuple):
     kind: str
     directory_or_path: str
     pattern: str | None = None
@@ -181,13 +186,32 @@ def candidate_files(root: Path, rules: Iterable[AllowRule]) -> set[str]:
         for path in root.rglob("*")
         if path.is_file()
         and ".git" not in path.relative_to(root).parts
+        and not any(
+            part in IGNORED_CANDIDATE_PARTS
+            for part in path.relative_to(root).parts
+        )
+        and path.suffix.lower() not in IGNORED_CANDIDATE_SUFFIXES
         and is_allowed(path.relative_to(root).as_posix(), rules)
     }
 
 
 def staged_files(root: Path) -> set[str]:
     result = subprocess.run(
-        ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMR", "-z"],
+        ["git", "ls-files", "--cached", "-z"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return {
+        _normalise(part.decode("utf-8"))
+        for part in result.stdout.split(b"\0")
+        if part
+    }
+
+
+def unstaged_files(root: Path) -> set[str]:
+    result = subprocess.run(
+        ["git", "diff", "--name-only", "--diff-filter=ACMR", "-z"],
         cwd=root,
         check=True,
         capture_output=True,
@@ -208,9 +232,17 @@ def _read_text(path: Path) -> str | None:
         return None
 
 
-def _validate_required(files: set[str]) -> list[str]:
-    errors = [f"required publication file is missing: {path}" for path in sorted(REQUIRED_FILES - files)]
-    for prefix in REQUIRED_TREES:
+def _validate_required(files: set[str], phase: str) -> list[str]:
+    required_files = SOURCE_REQUIRED_FILES
+    required_trees = SOURCE_REQUIRED_TREES
+    if phase == "final":
+        required_files |= FINAL_REQUIRED_FILES
+        required_trees += FINAL_REQUIRED_TREES
+    errors = [
+        f"required publication file is missing: {path}"
+        for path in sorted(required_files - files)
+    ]
+    for prefix in required_trees:
         if not any(path.startswith(prefix) for path in files):
             errors.append(f"required publication tree has no files: {prefix}")
     return errors
@@ -251,7 +283,12 @@ def _validate_paths(root: Path, files: set[str], rules: tuple[AllowRule, ...]) -
     return errors
 
 
-def _validate_text(root: Path, files: set[str]) -> list[str]:
+def _validate_text(
+    root: Path,
+    files: set[str],
+    *,
+    reject_pending: bool = True,
+) -> list[str]:
     errors: list[str] = []
     release_facing = {
         path
@@ -268,7 +305,7 @@ def _validate_text(root: Path, files: set[str]) -> list[str]:
         for label, pattern in SECRET_PATTERNS:
             if pattern.search(text):
                 errors.append(f"possible {label} in {relative}")
-        if relative in release_facing:
+        if reject_pending and relative in release_facing:
             match = PENDING_PATTERN.search(text)
             if match is not None:
                 errors.append(f"unresolved release placeholder {match.group(0)!r} in {relative}")
@@ -299,24 +336,40 @@ def _validate_readme_links(root: Path, files: set[str]) -> list[str]:
             continue
         if not resolved.exists():
             errors.append(f"broken README link: {raw_target}")
+            continue
+        relative = resolved.relative_to(root.resolve()).as_posix()
+        included = (
+            relative in files
+            if resolved.is_file()
+            else any(path.startswith(relative.rstrip("/") + "/") for path in files)
+        )
+        if not included:
+            errors.append(f"README link target is excluded from publication: {raw_target}")
     return errors
 
 
-def validate(root: Path, allowlist: Path, mode: str) -> dict[str, object]:
+def validate(root: Path, allowlist: Path, mode: str, phase: str) -> dict[str, object]:
     root = root.resolve()
     allowlist = allowlist if allowlist.is_absolute() else root / allowlist
     rules = load_allowlist(allowlist)
     candidates = candidate_files(root, rules)
+    if phase == "source":
+        candidates = {
+            path
+            for path in candidates
+            if not path.startswith("artifacts/release_v0.1.0/")
+        }
     files = candidates if mode == "worktree" else staged_files(root)
 
-    errors = _validate_required(files)
+    errors = _validate_required(files, phase)
     errors.extend(_validate_paths(root, files, rules))
-    errors.extend(_validate_text(root, files))
+    errors.extend(_validate_text(root, files, reject_pending=phase == "final"))
     errors.extend(_validate_readme_links(root, files))
 
     if mode == "staged":
         missing_from_index = sorted(candidates - files)
         extra_in_index = sorted(files - candidates)
+        unstaged_candidates = sorted(unstaged_files(root) & candidates)
         if missing_from_index:
             errors.append(
                 "allowlisted files missing from the initial index: "
@@ -327,12 +380,18 @@ def validate(root: Path, allowlist: Path, mode: str) -> dict[str, object]:
                 "files staged outside the current allowlisted candidate set: "
                 + ", ".join(extra_in_index)
             )
+        if unstaged_candidates:
+            errors.append(
+                "allowlisted files still have unstaged changes: "
+                + ", ".join(unstaged_candidates)
+            )
 
     if errors:
         raise PublicationValidationError("\n".join(errors))
 
     return {
         "mode": mode,
+        "phase": phase,
         "verification": "PASS",
         "file_count": len(files),
         "total_bytes": sum((root / relative).stat().st_size for relative in files),
@@ -345,13 +404,27 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--allowlist", type=Path, default=DEFAULT_ALLOWLIST)
     parser.add_argument("--mode", choices=("worktree", "staged"), default="worktree")
+    parser.add_argument(
+        "--phase",
+        choices=("source", "final"),
+        default="final",
+        help=(
+            "source permits unresolved result placeholders and does not require "
+            "the frozen bundle; final enforces both"
+        ),
+    )
     return parser
 
 
 def main() -> int:
     arguments = _parser().parse_args()
     try:
-        result = validate(arguments.root, arguments.allowlist, arguments.mode)
+        result = validate(
+            arguments.root,
+            arguments.allowlist,
+            arguments.mode,
+            arguments.phase,
+        )
     except (PublicationValidationError, OSError, subprocess.CalledProcessError) as exc:
         print(f"publication verification: FAIL\n{exc}", file=sys.stderr)
         return 1

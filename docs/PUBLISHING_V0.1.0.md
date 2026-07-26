@@ -39,6 +39,18 @@ The second command checks the wider Git candidate set for:
 
 Both gates are read-only.
 
+If the atomic bundle must be generated from a clean clone, the initial
+source-only commit may use:
+
+```bash
+python scripts/validate_publication_tree.py --phase source --mode worktree
+```
+
+`--phase source` still enforces the allowlist, size, secret, link, cache, and
+all-atom-material checks. It only relaxes the final bundle requirement and the
+release-number placeholder check. The second, final result commit must use the
+default strict `--phase final`.
+
 ## Safe initial staging
 
 Never use `git add -A`, `git add .`, or `git add artifacts`.
@@ -75,22 +87,34 @@ git add -- \
   scripts/run_smoke.sh \
   scripts/run_warm_vs_energy_b20k_pf20k.sh \
   scripts/watch_warm10k_e20k_then_eval.sh \
-  release/publication_allowlist_v0.1.0.txt \
-  artifacts/release_v0.1.0
+  release/publication_allowlist_v0.1.0.txt
 ```
 
-Now prove that the index is exactly the allowlisted candidate set:
+For the source-only initial commit, prove that the index is exactly the
+allowlisted source candidate set:
 
 ```bash
-python scripts/validate_publication_tree.py --mode staged
+python scripts/validate_publication_tree.py --phase source --mode staged
 git diff --cached --check
 git diff --cached --stat
 git status --short
 ```
 
-Only after inspecting those outputs should the initial commit be created:
+Only after inspecting those outputs should the source commit be created:
 
 ```bash
+git commit -m "feat: publish cg-bms-jax source and benchmark workflows"
+```
+
+After building and verifying the bundle from that clean source commit, stage
+only the atomic directory and finalized release documentation:
+
+```bash
+git add -- artifacts/release_v0.1.0 docs/RELEASE_RESULTS_V0.1.0.md README.md
+python scripts/validate_release_scope.py artifacts/release_v0.1.0
+python scripts/validate_publication_tree.py --phase final --mode staged
+git diff --cached --check
+git diff --cached --stat
 git commit -m "release: freeze cg-bms-jax v0.1.0 benchmarks"
 ```
 

@@ -137,6 +137,7 @@ class PFProvenance:
     density_mode: str
     sampling_audit: dict[str, Any]
     endpoint_metadata_audit: dict[str, Any]
+    controller_kind_audit: dict[str, Any]
     no_clip_audit: dict[str, Any]
 
 
@@ -497,11 +498,28 @@ def _validate_arm_identity(
         audited_missing_endpoint_fields,
         missing_endpoint_fields,
     )
-    require_equal(
-        "pf.forward_controller_kind",
-        pf.metadata.get("forward_controller_kind"),
-        arm.forward_role,
-    )
+    if "forward_controller_kind" in pf.metadata:
+        require_equal(
+            "pf.forward_controller_kind",
+            pf.metadata["forward_controller_kind"],
+            arm.forward_role,
+        )
+        require_equal(
+            "pf.controller_kind_audit.schema_status",
+            pf.controller_kind_audit.get("schema_status"),
+            "field_present",
+        )
+    else:
+        require_equal(
+            "pf.controller_kind_audit.schema_status",
+            pf.controller_kind_audit.get("schema_status"),
+            "legacy_field_absent",
+        )
+        require_equal(
+            "pf.controller_kind_audit.checkpoint_role",
+            pf.controller_kind_audit.get("checkpoint_role"),
+            arm.forward_role,
+        )
     require_equal("pf.seed", pf.metadata.get("seed"), _expected_pf_seed(arm))
     require_equal(
         "pf.forward_metadata",
@@ -876,6 +894,24 @@ def _pf_provenance(
             ],
             "accepted_missing_fields_require_checkpoint_data_linkage": True,
         }
+        embedded_forward_metadata = metadata.get("forward_metadata")
+        embedded_forward_role = (
+            embedded_forward_metadata.get("role")
+            if isinstance(embedded_forward_metadata, Mapping)
+            else None
+        )
+        controller_kind_audit = {
+            "schema_status": (
+                "field_present"
+                if "forward_controller_kind" in metadata
+                else "legacy_field_absent"
+            ),
+            "archive_field": metadata.get("forward_controller_kind"),
+            "checkpoint_role": embedded_forward_role,
+            "accepted_legacy_absence_requires_checkpoint_sha_and_metadata_match": (
+                True
+            ),
+        }
 
     expected_metadata = {
         "forward_checkpoint_sha256": forward_sha256,
@@ -913,6 +949,7 @@ def _pf_provenance(
         density_mode=density_mode,
         sampling_audit=sampling_audit,
         endpoint_metadata_audit=endpoint_metadata_audit,
+        controller_kind_audit=controller_kind_audit,
         no_clip_audit=no_clip_audit,
     )
 
@@ -2119,6 +2156,7 @@ def _write_provenance(
             "metadata": pf.metadata,
             "sampling_provenance_audit": pf.sampling_audit,
             "endpoint_metadata_audit": pf.endpoint_metadata_audit,
+            "controller_kind_audit": pf.controller_kind_audit,
             "no_clip_audit": pf.no_clip_audit,
         },
     )
