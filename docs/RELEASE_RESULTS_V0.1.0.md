@@ -7,12 +7,14 @@ the first public `cg-bms-jax` release. It intentionally separates:
 2. optional clipped diagnostics;
 3. display-only plot windows;
 4. historical stress tests; and
-5. experimental code that is shipped but not benchmarked.
+5. experimental source modules that are not benchmarked.
 
-No field marked `PENDING_VERIFIED_AGGREGATION` or `PENDING_VERIFIED_FREEZE` is
-a result. Those fields must be replaced only after the corresponding
-checkpoints, PF archives, metrics, and seed aggregation have passed provenance
-verification.
+The authoritative frozen payload is
+[`artifacts/release_v0.1.0`](../artifacts/release_v0.1.0/README.md).
+Numerical values live in `summary.json` and `per_seed.json`; provenance and
+input identities live in `SOURCE_RESULTS_INDEX.json`, `provenance/`, and
+`MANIFEST.json`. This document does not duplicate values that can drift from
+those machine-readable records.
 
 ## 1. Release claim
 
@@ -39,8 +41,8 @@ estimator.
 |---|---|---|---|
 | MB CG1D | cold Energy-BMS + PF reweighting | endpoint-independent CG-BG 1D PMF | frozen canonical result |
 | analytic MB2D | cold Energy-BMS + PF reweighting | endpoint-independent analytic target | frozen canonical result |
-| analytic MB2D | equilibrium bridge + PF reweighting | `equilibrium_exact_v1` | canonical; final three-seed aggregation pending |
-| analytic MB2D | equilibrium bridge-to-Energy + PF reweighting | `equilibrium_exact_v1`, then fresh Energy-BMS | canonical; final three-seed aggregation pending |
+| analytic MB2D | equilibrium bridge + PF reweighting | `equilibrium_exact_v1` | frozen canonical three-seed result |
+| analytic MB2D | equilibrium bridge-to-Energy + PF reweighting | `equilibrium_exact_v1`, then fresh Energy-BMS | frozen canonical three-seed result |
 | analytic MB2D | biased bridge + PF reweighting | deliberately biased full-support synthetic mixture | frozen historical stress test |
 | analytic MB2D | biased bridge-to-Energy + PF reweighting | same biased mixture, then fresh Energy-BMS | frozen historical stress test |
 | six-bead CG Ala2 | selected bridge/warm and bridge-to-Energy paths + PF reweighting | hash-pinned CG endpoint/PMF assets | frozen positive and failure-case evidence with explicit ESS caveats |
@@ -51,12 +53,11 @@ of reweighting under known proposal bias.
 
 ## 3. Explicit exclusion
 
-The 22-atom OpenMM Ala2 implementation, configs, and smoke scripts remain in
-the repository. **All full-atom Ala2 runs are excluded from the v0.1 benchmark,
-release artifact bundle, and scientific claims.** They are unfinished
-development material and should not appear in the release results table.
-
-This exclusion does not require deleting the implementation.
+Generic experimental source modules may remain for development continuity.
+Full-atom experiment configs, datasets, run scripts, result documents,
+figures, checkpoints, and benchmark assets are omitted from the publishable
+tree. **All full-atom Ala2 runs are excluded from the v0.1 benchmark, frozen
+artifact bundle, supported workflows, and scientific claims.**
 
 ## 4. Formal weighting and diagnostic views
 
@@ -153,13 +154,12 @@ Dataset SHA-256:
 f4c43d8feff619102e5cc1f8ad2dbd422d9a201453d356d4f59e48cb9032347d
 ```
 
-The following values remain intentionally unset until all three seeds pass
-checkpoint/PF provenance validation and final aggregation:
-
-| arm | unweighted error | weighted error | ESS/N | max weight | seed count |
-|---|---|---|---|---|---|
-| equilibrium bridge | `PENDING_VERIFIED_AGGREGATION` | `PENDING_VERIFIED_AGGREGATION` | `PENDING_VERIFIED_AGGREGATION` | `PENDING_VERIFIED_AGGREGATION` | `PENDING_VERIFIED_AGGREGATION` |
-| equilibrium bridge-to-Energy | `PENDING_VERIFIED_AGGREGATION` | `PENDING_VERIFIED_AGGREGATION` | `PENDING_VERIFIED_AGGREGATION` | `PENDING_VERIFIED_AGGREGATION` | `PENDING_VERIFIED_AGGREGATION` |
+The verified per-seed and aggregate values for both equilibrium arms are stored
+under the `mb2d_analytic/*` groups in
+[`summary.json`](../artifacts/release_v0.1.0/summary.json) and
+[`per_seed.json`](../artifacts/release_v0.1.0/per_seed.json). The records
+include proposal and weighted errors, ESS/N, maximum weight, tail masses,
+valid/support fractions, and seed count.
 
 Required release files for each arm:
 
@@ -212,14 +212,12 @@ statistics are reported. It is not a blanket claim that every Ala2 run
 improves. Cold-start failure, poor proposal coverage, and low-ESS PF results
 must be retained rather than filtered from the release history.
 
-The final numerical Ala2 benchmark table is populated only from locally
-frozen, checksum-verified metrics:
-
-| frozen arm | proposal metric | weighted metric | ESS/N | max/top mass | status |
-|---|---|---|---|---|---|
-| warm/bridge | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | positive or failure after audit |
-| warm/bridge-to-Energy | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | positive or failure after audit |
-| selected cold failure | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | `PENDING_VERIFIED_FREEZE` | failure case |
+The checksum-verified CG Ala2 values are stored under the `ala2_cg/*` groups in
+[`summary.json`](../artifacts/release_v0.1.0/summary.json) and
+[`per_seed.json`](../artifacts/release_v0.1.0/per_seed.json). Each arm retains
+its release role and proposal/weighted metrics beside ESS and weight-tail
+diagnostics, including outcomes where reweighting does not improve every
+observable.
 
 Required separate image files:
 
@@ -252,24 +250,22 @@ Metrics without this provenance are not release benchmarks.
 
 ## 7. Artifact layout
 
-The final frozen bundle should use:
+The frozen bundle uses:
 
 ```text
 artifacts/release_v0.1.0/
 |-- MANIFEST.json
-|-- BENCHMARKS.md
-|-- parameters/
-|   |-- mb_cg1d/
-|   |-- mb2d_cold_energy/
-|   |-- mb2d_equilibrium_bridge/
-|   |-- mb2d_equilibrium_bridge_energy/
-|   |-- mb2d_biased_bridge/
-|   |-- mb2d_biased_bridge_energy/
-|   `-- ala2_cg/
+|-- README.md
+|-- summary.{csv,json}
+|-- per_seed.{csv,json}
+|-- SOURCE_RESULTS_INDEX.{csv,json}
+|-- SHA256SUMS
+|-- configs/
 |-- metrics/
 |   `-- <system>/<arm>/<seed-or-summary>.json
+|-- provenance/
 `-- figures/
-    `-- <system>/<arm>/<individual-panel>.{png,pdf}
+    `-- <system>/<arm>/<seed-or-pooled>/<view>/<individual-panel>.{png,pdf}
 ```
 
 Composite figures may be included as previews, but every constituent panel
@@ -278,19 +274,16 @@ must also be saved independently for later paper assembly.
 `MANIFEST.json` should record the SHA-256 and semantic role of every file. It
 must also record that the all-atom Ala2 benchmark is excluded.
 
-## 8. Release gate
+## 8. Release verification
 
-- [ ] MB CG1D frozen files copied and checksummed.
-- [ ] MB2D cold Energy-BMS frozen files copied and checksummed.
-- [ ] Equilibrium MB2D bridge three-seed aggregation verified.
-- [ ] Equilibrium MB2D bridge-to-Energy three-seed aggregation verified.
-- [ ] Legacy biased synthetic stress tests relabelled and checksummed.
-- [ ] CG Ala2 positive and failure cases audited and copied locally.
-- [ ] Every composite plot has separately saved panels.
-- [ ] Energy distributions use a documented display-only robust window.
-- [ ] Formal no-clip and diagnostic clip1 outputs are visibly separated.
-- [ ] Parameter/provenance bundle is complete.
-- [ ] All-atom Ala2 is absent from benchmark tables and release artifacts.
-- [ ] Artifact manifest hashes pass.
-- [ ] Release tag is created only after every non-pending benchmark field is
-      backed by a frozen file.
+The release is publishable only when both commands pass:
+
+```bash
+python scripts/validate_release_scope.py artifacts/release_v0.1.0
+python scripts/validate_publication_tree.py --phase final --mode staged
+```
+
+These checks verify the manifest hashes, complete standalone panels and
+machine-readable plot data, formal/diagnostic separation, robust energy-view
+metadata, frozen configs and provenance, and the explicit absence of
+full-atom Ala2 benchmark materials.

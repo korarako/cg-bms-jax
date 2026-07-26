@@ -53,7 +53,7 @@ SOURCE_REQUIRED_TREES = (
 FINAL_REQUIRED_TREES = (
     "artifacts/release_v0.1.0/figures/",
     "artifacts/release_v0.1.0/metrics/",
-    "artifacts/release_v0.1.0/parameters/",
+    "artifacts/release_v0.1.0/configs/",
     "artifacts/release_v0.1.0/provenance/",
 )
 
@@ -312,7 +312,12 @@ def _validate_text(
     return errors
 
 
-def _validate_readme_links(root: Path, files: set[str]) -> list[str]:
+def _validate_readme_links(
+    root: Path,
+    files: set[str],
+    *,
+    allow_missing_release_bundle: bool = False,
+) -> list[str]:
     if "README.md" not in files:
         return ["README.md is not in the publication set"]
     text = (root / "README.md").read_text(encoding="utf-8")
@@ -327,6 +332,10 @@ def _validate_readme_links(root: Path, files: set[str]) -> list[str]:
             continue
         target = target.split("#", 1)[0].split("?", 1)[0]
         if not target:
+            continue
+        if allow_missing_release_bundle and target.startswith(
+            "artifacts/release_v0.1.0/"
+        ):
             continue
         resolved = (root / target).resolve()
         try:
@@ -364,7 +373,13 @@ def validate(root: Path, allowlist: Path, mode: str, phase: str) -> dict[str, ob
     errors = _validate_required(files, phase)
     errors.extend(_validate_paths(root, files, rules))
     errors.extend(_validate_text(root, files, reject_pending=phase == "final"))
-    errors.extend(_validate_readme_links(root, files))
+    errors.extend(
+        _validate_readme_links(
+            root,
+            files,
+            allow_missing_release_bundle=phase == "source",
+        )
+    )
 
     if mode == "staged":
         missing_from_index = sorted(candidates - files)

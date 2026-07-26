@@ -37,10 +37,13 @@ The complete MB replication and validation matrix is documented in
 code is part of this pure-JAX repository; the older mixed Torch/JAX `cg-bms`
 checkout remains an unchanged numerical reference.
 
-The exact v0.1 result boundary, artifact layout, reporting rules, and
-still-pending aggregation fields are recorded in
-[`docs/RELEASE_RESULTS_V0.1.0.md`](docs/RELEASE_RESULTS_V0.1.0.md). A value
-marked `PENDING_VERIFIED_AGGREGATION` is deliberately not a release number.
+The exact v0.1 result boundary, reporting rules, and provenance contract are
+recorded in
+[`docs/RELEASE_RESULTS_V0.1.0.md`](docs/RELEASE_RESULTS_V0.1.0.md).
+The immutable result payload is
+[`artifacts/release_v0.1.0`](artifacts/release_v0.1.0/README.md); its
+`summary.json`, `per_seed.json`, `SOURCE_RESULTS_INDEX.json`, `MANIFEST.json`,
+and `SHA256SUMS` are authoritative for numerical values and input identities.
 
 MB2D bridge results are data-versioned. The completed 2026-07-24 bridge and
 bridge-to-Energy runs used a deliberately biased, full-support synthetic
@@ -286,6 +289,6 @@ incorporated Acceptable Use Policy. CG-BG-derived portions retain their MIT
 notice. See `LICENSE`, `LICENSES/`, `THIRD_PARTY_NOTICES.md`, and `UPSTREAM.md`.
 
 Downloaded checkpoints and trajectory files are not committed or included in
-the wheel. Before a public release, replace the placeholder repository URL and
-add the actual project authors in `CITATION.cff`; those identities cannot be
-inferred safely from the source tree.
+the wheel. The frozen release instead records their paths, sizes, SHA-256
+digests, and validated metadata in
+`artifacts/release_v0.1.0/SOURCE_RESULTS_INDEX.json`.

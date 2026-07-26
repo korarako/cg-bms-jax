@@ -4,6 +4,8 @@ import numpy as np
 import pytest
 
 from cg_bms_jax.evaluation.mb2d import (
+    EXACT_ENERGY_DISPLAY_SMOOTH_SIGMA_BINS,
+    _smooth_density_for_display,
     analytic_mb2d_reference,
     compare_likelihood_archives,
     evaluate_mb2d,
@@ -58,6 +60,16 @@ def test_importance_weight_diagnostics_reports_concentration() -> None:
     np.testing.assert_allclose(result["top_50_percent_mass"], 0.9)
 
 
+def test_exact_energy_display_smoothing_preserves_mass_and_reduces_spikes() -> None:
+    density = np.zeros(41, dtype=np.float64)
+    density[[8, 15, 24, 33]] = [1.0, 0.6, 0.9, 0.4]
+    smoothed = _smooth_density_for_display(density)
+    np.testing.assert_allclose(smoothed.sum(), density.sum(), rtol=1.0e-12)
+    assert smoothed.max() < density.max()
+    assert np.sum(np.abs(np.diff(smoothed))) < np.sum(np.abs(np.diff(density)))
+    assert EXACT_ENERGY_DISPLAY_SMOOTH_SIGMA_BINS == 2.0
+
+
 def _uniform_proposal(seed: int = 7, size: int = 800) -> dict[str, np.ndarray]:
     rng = np.random.default_rng(seed)
     coordinates = rng.uniform(0.0, 50.0, size=(size, 2))
@@ -90,13 +102,16 @@ def test_mb2d_evaluation_and_sweeps_write_outputs(tmp_path) -> None:
         bins=50,
     )
     assert evaluation["metrics"]["weighted"] is not None
-    assert evaluation["metrics"]["plot_style"]["palette"]["proposal"] == (
-        "#F2A174"
+    assert evaluation["metrics"]["plot_style"]["palette"]["proposal"] == ("#F2A174")
+    assert (
+        evaluation["metrics"]["plot_style"]["palette"]["reweighted_outline"]
+        == "#4472C4"
     )
-    assert evaluation["metrics"]["plot_style"]["palette"][
-        "reweighted_outline"
-    ] == "#4472C4"
     assert evaluation["metrics"]["plot_style"]["fes_colormap"] == "viridis"
+    smoothing = evaluation["metrics"]["energy_plot_view"]["exact_curve_smoothing"]
+    assert smoothing["display_only"]
+    assert smoothing["mass_preserved"]
+    assert smoothing["formal_metrics_unchanged"]
     assert (tmp_path / "evaluation" / "mb2d_plots.png").is_file()
     for filename in (
         "mb2d_exact_fes.png",
@@ -161,9 +176,10 @@ def test_mb2d_energy_view_is_target_anchored_and_reports_outlier_mass(
         result["metrics"]["energy_plot_view"]["proposal"]["above_view_mass"]
         >= 1.0 / 801.0
     )
-    assert result["metrics"]["unweighted"]["energy_mean"] != baseline["metrics"]["unweighted"][
-        "energy_mean"
-    ]
+    assert (
+        result["metrics"]["unweighted"]["energy_mean"]
+        != baseline["metrics"]["unweighted"]["energy_mean"]
+    )
 
 
 def test_pooled_mb2d_visualization_uses_every_seed_sample(tmp_path) -> None:

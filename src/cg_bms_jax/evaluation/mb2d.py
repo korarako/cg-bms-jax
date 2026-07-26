@@ -33,6 +33,7 @@ DEFAULT_BASIN_CENTERS = {
     "center": (31.200, 15.472),
     "lower_right": (41.968, 8.448),
 }
+EXACT_ENERGY_DISPLAY_SMOOTH_SIGMA_BINS = 2.0
 
 
 @dataclass(frozen=True)
@@ -106,7 +107,10 @@ def analytic_mb2d_reference(
     if len(domain) != 2:
         raise ValueError("domain must contain x and y limits")
     limits = tuple((float(axis[0]), float(axis[1])) for axis in domain)
-    if any(not np.isfinite(axis).all() or axis[0] >= axis[1] for axis in map(np.asarray, limits)):
+    if any(
+        not np.isfinite(axis).all() or axis[0] >= axis[1]
+        for axis in map(np.asarray, limits)
+    ):
         raise ValueError("domain limits must be finite and increasing")
     x_edges = np.linspace(*limits[0], int(bins[0]) + 1)
     y_edges = np.linspace(*limits[1], int(bins[1]) + 1)
@@ -182,7 +186,9 @@ def extract_mb2d_coordinates(coordinates: Any) -> np.ndarray:
         return values
     if values.ndim > 2 and int(np.prod(values.shape[1:])) == 2:
         return values.reshape(values.shape[0], 2)
-    raise ValueError(f"MB2D coordinates must contain two event dimensions, got {values.shape}")
+    raise ValueError(
+        f"MB2D coordinates must contain two event dimensions, got {values.shape}"
+    )
 
 
 def _normalized_histogram(
@@ -197,25 +203,25 @@ def _normalized_histogram(
         bins=(reference.x_edges, reference.y_edges),
         weights=weights,
     )
-    total_input = float(coordinates.shape[0]) if weights is None else float(np.sum(weights))
+    total_input = (
+        float(coordinates.shape[0]) if weights is None else float(np.sum(weights))
+    )
     retained = float(np.sum(hist))
     if retained <= 0.0:
         raise ValueError("No proposal mass lies inside the analytic MB2D domain")
     return hist / retained, retained / total_input
 
 
-def _probability_js(left: np.ndarray, right: np.ndarray, *, baseline: float = 1.0e-15) -> float:
+def _probability_js(
+    left: np.ndarray, right: np.ndarray, *, baseline: float = 1.0e-15
+) -> float:
     p = np.asarray(left, dtype=np.float64).reshape(-1) + baseline
     q = np.asarray(right, dtype=np.float64).reshape(-1) + baseline
     p /= np.sum(p)
     q /= np.sum(q)
     mixture = 0.5 * (p + q)
     return float(
-        0.5
-        * (
-            np.sum(p * np.log(p / mixture))
-            + np.sum(q * np.log(q / mixture))
-        )
+        0.5 * (np.sum(p * np.log(p / mixture)) + np.sum(q * np.log(q / mixture)))
     )
 
 
@@ -256,7 +262,9 @@ def _basin_indices(
     if centers.ndim != 2 or centers.shape[1] != 2 or centers.shape[0] < 2:
         raise ValueError("basin_centers must define at least two 2D centres")
     points = extract_mb2d_coordinates(coordinates)
-    return np.argmin(np.sum((points[:, None, :] - centers[None, :, :]) ** 2, axis=-1), axis=1)
+    return np.argmin(
+        np.sum((points[:, None, :] - centers[None, :, :]) ** 2, axis=-1), axis=1
+    )
 
 
 def _basin_masses(
@@ -308,9 +316,7 @@ def mb2d_distribution_metrics(
         weights=normalized,
     )
     sample_energy = muller_brown_energy_numpy(points)
-    exact_energy_mean = float(
-        np.sum(reference.probability * reference.energy)
-    )
+    exact_energy_mean = float(np.sum(reference.probability * reference.energy))
     sample_energy_mean = float(
         np.mean(sample_energy)
         if normalized is None
@@ -360,7 +366,9 @@ def _weighted_quantile(
 
     mass = np.asarray(weights, dtype=np.float64).reshape(-1)
     if mass.shape != data.shape:
-        raise ValueError("weighted quantile values and weights must have the same shape")
+        raise ValueError(
+            "weighted quantile values and weights must have the same shape"
+        )
     valid = np.isfinite(data) & np.isfinite(mass) & (mass > 0.0)
     if not valid.any():
         raise ValueError("weighted quantile contains no positive finite mass")
@@ -422,6 +430,39 @@ def _energy_density_in_view(
     finite = np.isfinite(data) & np.isfinite(mass)
     counts, _ = np.histogram(data[finite], bins=edges, weights=mass[finite])
     return counts / np.diff(edges)
+
+
+def _smooth_density_for_display(
+    density: Any,
+    *,
+    sigma_bins: float = EXACT_ENERGY_DISPLAY_SMOOTH_SIGMA_BINS,
+) -> np.ndarray:
+    """Return a mass-preserving Gaussian-bin smoothing for display only.
+
+    The analytic MB2D energy reference is evaluated on a regular coordinate
+    grid. Directly drawing its weighted energy histogram produces visually
+    dominant grid spikes even though the underlying target is continuous.
+    This helper smooths only the plotted exact-energy curve; formal metrics and
+    the raw machine-readable histogram remain unchanged.
+    """
+
+    values = np.asarray(density, dtype=np.float64).reshape(-1)
+    sigma = float(sigma_bins)
+    if not np.isfinite(sigma) or sigma <= 0.0:
+        raise ValueError("sigma_bins must be finite and positive")
+    if values.size < 2 or not np.any(values > 0.0):
+        return values.copy()
+    radius = max(1, int(np.ceil(4.0 * sigma)))
+    offsets = np.arange(-radius, radius + 1, dtype=np.float64)
+    kernel = np.exp(-0.5 * (offsets / sigma) ** 2)
+    kernel /= np.sum(kernel)
+    padded = np.pad(values, (radius, radius), mode="edge")
+    smoothed = np.convolve(padded, kernel, mode="valid")
+    raw_mass = float(np.sum(values))
+    smooth_mass = float(np.sum(smoothed))
+    if raw_mass > 0.0 and smooth_mass > 0.0:
+        smoothed *= raw_mass / smooth_mass
+    return smoothed
 
 
 def _energy_plot_view(
@@ -548,7 +589,9 @@ def evaluate_mb2d(
         ("Proposal", _free_energy(unweighted_hist, reference.beta)),
         (
             "Reweighted" if weighted_hist is not None else "Reweighted (unavailable)",
-            None if weighted_hist is None else _free_energy(weighted_hist, reference.beta),
+            None
+            if weighted_hist is None
+            else _free_energy(weighted_hist, reference.beta),
         ),
     )
     image = None
@@ -636,6 +679,14 @@ def evaluate_mb2d(
     if int(energy_histogram_bins) < 10:
         raise ValueError("energy_histogram_bins must be at least 10")
     energy_bins = np.linspace(lower, upper, int(energy_histogram_bins) + 1)
+    exact_energy_density = _energy_density_in_view(
+        exact_energy,
+        energy_bins,
+        weights=exact_weights,
+    )
+    exact_energy_display_density = _smooth_density_for_display(
+        exact_energy_density,
+    )
     exact_energy_view = _energy_mass_summary(
         exact_energy,
         lower=lower,
@@ -677,10 +728,10 @@ def evaluate_mb2d(
             label="Reweighted",
         )
     axes[1, 2].stairs(
-        _energy_density_in_view(exact_energy, energy_bins, weights=exact_weights),
+        exact_energy_display_density,
         energy_bins,
         color=EXACT_COLOR,
-        linewidth=1.8,
+        linewidth=1.5,
         label="Exact",
     )
     annotation = (
@@ -780,7 +831,13 @@ def evaluate_mb2d(
             None if weighted_hist is None else np.sum(weighted_hist, axis=0),
         ),
     )
-    for coordinate_name, centers, exact_marginal, proposal_marginal, weighted_marginal in marginal_specs:
+    for (
+        coordinate_name,
+        centers,
+        exact_marginal,
+        proposal_marginal,
+        weighted_marginal,
+    ) in marginal_specs:
         panel_path = output / f"mb2d_{coordinate_name}_marginal.png"
         panel_figure, panel_axis = plt.subplots(figsize=(5.2, 4.0))
         filled_curve(
@@ -834,10 +891,10 @@ def evaluate_mb2d(
             label="Reweighted",
         )
     energy_axis.stairs(
-        _energy_density_in_view(exact_energy, energy_bins, weights=exact_weights),
+        exact_energy_display_density,
         energy_bins,
         color=EXACT_COLOR,
-        linewidth=1.8,
+        linewidth=1.5,
         label="Exact",
     )
     energy_axis.text(
@@ -869,7 +926,10 @@ def evaluate_mb2d(
             "beta": reference.beta,
             "kT": float(kT),
             "domain": [list(axis) for axis in reference.domain],
-            "bins": [int(reference.probability.shape[0]), int(reference.probability.shape[1])],
+            "bins": [
+                int(reference.probability.shape[0]),
+                int(reference.probability.shape[1]),
+            ],
         },
         "num_samples": int(coordinates.shape[0]),
         "weight_source": weight_source,
@@ -906,6 +966,13 @@ def evaluate_mb2d(
             "display_only": True,
             "formal_no_clip": clip_percentile is None,
             "sample_usage": "all",
+            "exact_curve_smoothing": {
+                "display_only": True,
+                "method": "gaussian_kernel_on_histogram_bins",
+                "sigma_bins": EXACT_ENERGY_DISPLAY_SMOOTH_SIGMA_BINS,
+                "mass_preserved": True,
+                "formal_metrics_unchanged": True,
+            },
             "lower_quantile": float(energy_lower_quantile),
             "upper_quantile": float(energy_upper_quantile),
             "padding_fraction": float(energy_view_padding),
@@ -1040,22 +1107,14 @@ def evaluate_pooled_mb2d(
         "removed_upper_percent": (
             None
             if clip_percentile is None
-            else (
-                float(100.0 - float(clip_percentile))
-                if clip_mode == "drop"
-                else 0.0
-            )
+            else (float(100.0 - float(clip_percentile)) if clip_mode == "drop" else 0.0)
         ),
         "affected_upper_percent": (
-            None
-            if clip_percentile is None
-            else float(100.0 - float(clip_percentile))
+            None if clip_percentile is None else float(100.0 - float(clip_percentile))
         ),
         "clip_mode": None if clip_percentile is None else str(clip_mode),
         "clip_scope": (
-            None
-            if clip_percentile is None
-            else "per_seed_before_equal_mass_pooling"
+            None if clip_percentile is None else "per_seed_before_equal_mass_pooling"
         ),
     }
     result["metrics"]["weight_transform"] = {
@@ -1066,16 +1125,10 @@ def evaluate_pooled_mb2d(
         "removed_upper_percent": (
             None
             if clip_percentile is None
-            else (
-                float(100.0 - float(clip_percentile))
-                if clip_mode == "drop"
-                else 0.0
-            )
+            else (float(100.0 - float(clip_percentile)) if clip_mode == "drop" else 0.0)
         ),
         "affected_upper_percent": (
-            None
-            if clip_percentile is None
-            else float(100.0 - float(clip_percentile))
+            None if clip_percentile is None else float(100.0 - float(clip_percentile))
         ),
         "clip_mode": None if clip_percentile is None else str(clip_mode),
         "scope": (
@@ -1112,7 +1165,9 @@ def _weights_from_raw_logw(
             raise KeyError("Temperature or prefix reweighting requires U")
         logq_field = "logq_ambient" if "logq_ambient" in data else "logp"
         if logq_field not in data:
-            raise KeyError("Temperature or prefix reweighting requires logq_ambient/logp")
+            raise KeyError(
+                "Temperature or prefix reweighting requires logq_ambient/logp"
+            )
         resolved_beta = 1.0 if beta is None else float(beta)
         raw = (
             -resolved_beta
@@ -1149,7 +1204,9 @@ def sample_size_convergence(
     if "R" not in data:
         raise KeyError("Sample-size convergence requires R")
     coordinates = extract_mb2d_coordinates(data["R"])
-    selected_sizes = sorted({int(size) for size in sizes if 0 < int(size) <= coordinates.shape[0]})
+    selected_sizes = sorted(
+        {int(size) for size in sizes if 0 < int(size) <= coordinates.shape[0]}
+    )
     if not selected_sizes:
         raise ValueError("No requested sample size lies inside the archive")
     if repeats <= 0:
@@ -1157,7 +1214,9 @@ def sample_size_convergence(
     reference = analytic_mb2d_reference(beta=1.0 / float(kT), bins=bins, domain=domain)
     rows: list[dict[str, float | int]] = []
     for repeat in range(int(repeats)):
-        permutation = np.random.default_rng(seed + repeat).permutation(coordinates.shape[0])
+        permutation = np.random.default_rng(seed + repeat).permutation(
+            coordinates.shape[0]
+        )
         for size in selected_sizes:
             indices = permutation[:size]
             weights, raw = _weights_from_raw_logw(data, indices)
@@ -1178,12 +1237,8 @@ def sample_size_convergence(
                     "ess": float(diagnostics["ess"]),
                     "ess_fraction": float(diagnostics["ess_fraction"]),
                     "max_weight": float(diagnostics["max_weight"]),
-                    "top_0p1_percent_mass": float(
-                        diagnostics["top_0p1_percent_mass"]
-                    ),
-                    "top_1_percent_mass": float(
-                        diagnostics["top_1_percent_mass"]
-                    ),
+                    "top_0p1_percent_mass": float(diagnostics["top_0p1_percent_mass"]),
+                    "top_1_percent_mass": float(diagnostics["top_1_percent_mass"]),
                     "logw_variance": float(diagnostics["logw_variance"]),
                 }
             )
@@ -1225,7 +1280,9 @@ def sample_size_convergence(
     return result
 
 
-def _plot_convergence_summary(summary: Sequence[Mapping[str, Any]], output: Path) -> None:
+def _plot_convergence_summary(
+    summary: Sequence[Mapping[str, Any]], output: Path
+) -> None:
     import matplotlib
 
     matplotlib.use("Agg", force=True)
@@ -1535,7 +1592,9 @@ def compare_mb2d_archives(
             "weighted_basin_l1_error": (
                 None if weighted is None else weighted["basin_l1_error"]
             ),
-            "ess_fraction": None if diagnostics is None else diagnostics["ess_fraction"],
+            "ess_fraction": None
+            if diagnostics is None
+            else diagnostics["ess_fraction"],
             "max_weight": None if diagnostics is None else diagnostics["max_weight"],
             "top_1_percent_mass": (
                 None if diagnostics is None else diagnostics["top_1_percent_mass"]

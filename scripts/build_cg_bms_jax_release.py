@@ -202,8 +202,7 @@ def _reject_all_atom_payload(payload: Any, *, source: str) -> None:
     matched = [marker for marker in ALL_ATOM_MARKERS if marker in serialized]
     if matched:
         raise ValueError(
-            f"All-atom Ala2 is excluded from this release; {source} contains "
-            f"{matched}"
+            f"All-atom Ala2 is excluded from this release; {source} contains {matched}"
         )
 
 
@@ -218,7 +217,9 @@ def _checkpoint_provenance(path: Path) -> CheckpointProvenance:
     if not manifest_path.is_file():
         raise FileNotFoundError(f"checkpoint manifest is missing: {manifest_path}")
     expected = digest_path.read_text(encoding="ascii").strip().lower()
-    if len(expected) != 64 or any(character not in "0123456789abcdef" for character in expected):
+    if len(expected) != 64 or any(
+        character not in "0123456789abcdef" for character in expected
+    ):
         raise ValueError(f"malformed checkpoint digest: {digest_path}")
     actual = _checkpoint_sha256(path)
     if not secrets.compare_digest(expected, actual):
@@ -246,14 +247,10 @@ def _checkpoint_metadata(
             f"{checkpoint.manifest.get('format')!r}"
         )
     if checkpoint.manifest.get("format_version") != 1:
-        raise ValueError(
-            f"unsupported checkpoint format version in {checkpoint.path}"
-        )
+        raise ValueError(f"unsupported checkpoint format version in {checkpoint.path}")
     metadata = checkpoint.manifest.get("metadata")
     if not isinstance(metadata, dict):
-        raise TypeError(
-            f"checkpoint manifest metadata is missing: {checkpoint.path}"
-        )
+        raise TypeError(f"checkpoint manifest metadata is missing: {checkpoint.path}")
     return metadata
 
 
@@ -327,9 +324,7 @@ def _validate_arm_identity(
 
     def require_equal(label: str, actual: Any, expected: Any) -> None:
         if actual != expected:
-            mismatches.append(
-                f"{label}: expected {expected!r}, found {actual!r}"
-            )
+            mismatches.append(f"{label}: expected {expected!r}, found {actual!r}")
 
     require_equal("forward.role", forward_metadata.get("role"), arm.forward_role)
     require_equal("backward.role", backward_metadata.get("role"), "backward")
@@ -358,9 +353,7 @@ def _validate_arm_identity(
             continue
         saved_experiment = saved_config.get("experiment", saved_config)
         if not isinstance(saved_experiment, Mapping):
-            mismatches.append(
-                f"{label}.manifest.config.experiment: missing mapping"
-            )
+            mismatches.append(f"{label}.manifest.config.experiment: missing mapping")
             continue
         require_equal(
             f"{label}.config_sha256",
@@ -608,9 +601,7 @@ def _validate_arm_identity(
             configured_data,
         )
         if any(value is None for value in initializer_fields):
-            mismatches.append(
-                "forward initializer path/SHA/role must all be present"
-            )
+            mismatches.append("forward initializer path/SHA/role must all be present")
         else:
             require_equal(
                 "forward.initial_controller_role",
@@ -637,8 +628,7 @@ def _validate_arm_identity(
 
     if mismatches:
         raise ValueError(
-            f"release identity lock failed for {arm.key}:\n  "
-            + "\n  ".join(mismatches)
+            f"release identity lock failed for {arm.key}:\n  " + "\n  ".join(mismatches)
         )
 
 
@@ -690,9 +680,7 @@ def _validate_formal_no_clip(
     )
     if not included.any():
         raise ValueError("formal PF archive contains no finite valid log weights")
-    raw_difference = np.abs(
-        stored_logw_raw[included] - recomputed_logw_raw[included]
-    )
+    raw_difference = np.abs(stored_logw_raw[included] - recomputed_logw_raw[included])
     maximum_raw_difference = float(np.max(raw_difference))
     if not np.allclose(
         stored_logw_raw[included],
@@ -708,9 +696,7 @@ def _validate_formal_no_clip(
     if np.any(weights[~included] != 0.0):
         raise ValueError("invalid/out-of-support samples must have exactly zero weight")
     expected = np.zeros_like(weights)
-    shifted = recomputed_logw_raw[included] - np.max(
-        recomputed_logw_raw[included]
-    )
+    shifted = recomputed_logw_raw[included] - np.max(recomputed_logw_raw[included])
     expected[included] = np.exp(shifted)
     expected /= expected.sum()
     difference = np.abs(weights - expected)
@@ -792,8 +778,7 @@ def _pf_provenance(
             raise ValueError(f"{path} is not a PF-ODE archive")
         if density_mode != "ambient_exact":
             raise ValueError(
-                f"{path} must use density_mode='ambient_exact', "
-                f"found {density_mode!r}"
+                f"{path} must use density_mode='ambient_exact', found {density_mode!r}"
             )
         metadata = json.loads(
             _scalar_string(archive["metadata_json"], field="metadata_json")
@@ -853,9 +838,7 @@ def _pf_provenance(
                 "expected_sample_count": expected_samples,
                 "coordinate_shape": list(coordinates.shape),
                 "weights_shape": list(np.asarray(archive["weights"]).shape),
-                "logq_ambient_shape": list(
-                    np.asarray(archive["logq_ambient"]).shape
-                ),
+                "logq_ambient_shape": list(np.asarray(archive["logq_ambient"]).shape),
                 "target_reduced_energy_shape": list(
                     np.asarray(archive["target_reduced_energy"]).shape
                 ),
@@ -888,9 +871,7 @@ def _pf_provenance(
                 field for field in endpoint_identity_fields if field in metadata
             ],
             "missing_fields": [
-                field
-                for field in endpoint_identity_fields
-                if field not in metadata
+                field for field in endpoint_identity_fields if field not in metadata
             ],
             "accepted_missing_fields_require_checkpoint_data_linkage": True,
         }
@@ -987,17 +968,13 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
     ala2_root = _default_path(
         args.ala2_root,
         root=root,
-        relative=(
-            "outputs/"
-            "ala2_ambient18_300k_bms_eta10_s1_canonical_additive_v3"
-        ),
+        relative=("outputs/ala2_ambient18_300k_bms_eta10_s1_canonical_additive_v3"),
     )
     ala2_positive_root = _default_path(
         args.ala2_positive_root,
         root=ala2_root,
         relative=(
-            "energy_from_warm10k_formal20k_20260719_2132/"
-            "pf10k_release_tol_20260726"
+            "energy_from_warm10k_formal20k_20260719_2132/pf10k_release_tol_20260726"
         ),
     )
     ala2_positive_training_root = _default_path(
@@ -1041,9 +1018,7 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
                 "primary",
                 "endpoint_independent_energy_bms",
                 legacy_run / "cold_forward" / "forward_step_00100000",
-                legacy_run
-                / "cold_energy_backward100k"
-                / "backward_step_00100000",
+                legacy_run / "cold_energy_backward100k" / "backward_step_00100000",
                 legacy_run / f"cold_energy_pf{args.mb_samples}.npz",
             ),
             (
@@ -1051,21 +1026,15 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
                 "biased_endpoint_stress_test",
                 "deliberately_biased_synthetic_full_support_v1",
                 legacy_run / "bridge" / "forward_pretrain_step_00100000",
-                legacy_run
-                / "bridge_only_backward100k"
-                / "backward_step_00100000",
+                legacy_run / "bridge_only_backward100k" / "backward_step_00100000",
                 legacy_run / f"bridge_only_pf{args.mb_samples}.npz",
             ),
             (
                 "biased_bridge_energy",
                 "biased_endpoint_stress_test",
                 "deliberately_biased_synthetic_full_support_v1",
-                legacy_run
-                / "bridge_energy_forward"
-                / "forward_step_00100000",
-                legacy_run
-                / "bridge_energy_backward100k"
-                / "backward_step_00100000",
+                legacy_run / "bridge_energy_forward" / "forward_step_00100000",
+                legacy_run / "bridge_energy_backward100k" / "backward_step_00100000",
                 legacy_run / f"bridge_energy_pf{args.mb_samples}.npz",
             ),
         )
@@ -1083,9 +1052,7 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
                     pf_archive=pf,
                     config_path=config / "mb2d_analytic.yaml",
                     forward_role=(
-                        "forward_pretrain"
-                        if arm == "biased_bridge_only"
-                        else "forward"
+                        "forward_pretrain" if arm == "biased_bridge_only" else "forward"
                     ),
                     forward_step=100_000,
                     backward_step=100_000,
@@ -1103,8 +1070,7 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
                 equilibrium_run
                 / "equilibrium_bridge_only_backward100k"
                 / "backward_step_00100000",
-                equilibrium_run
-                / f"equilibrium_bridge_only_pf{args.mb_samples}.npz",
+                equilibrium_run / f"equilibrium_bridge_only_pf{args.mb_samples}.npz",
             ),
             (
                 "equilibrium_bridge_energy",
@@ -1114,8 +1080,7 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
                 equilibrium_run
                 / "equilibrium_bridge_energy_backward100k"
                 / "backward_step_00100000",
-                equilibrium_run
-                / f"equilibrium_bridge_energy_pf{args.mb_samples}.npz",
+                equilibrium_run / f"equilibrium_bridge_energy_pf{args.mb_samples}.npz",
             ),
         )
         for arm, forward, backward, pf in equilibrium_specs:
@@ -1130,9 +1095,7 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
                     forward_checkpoint=forward,
                     backward_checkpoint=backward,
                     pf_archive=pf,
-                    config_path=(
-                        config / "mb2d_analytic_equilibrium_bridge.yaml"
-                    ),
+                    config_path=(config / "mb2d_analytic_equilibrium_bridge.yaml"),
                     forward_role=(
                         "forward_pretrain"
                         if arm == "equilibrium_bridge_only"
@@ -1158,9 +1121,7 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
                 seed=3,
                 expected_samples=args.ala2_positive_samples,
                 forward_checkpoint=(
-                    ala2_positive_training_root
-                    / "forward"
-                    / "forward_step_00020000"
+                    ala2_positive_training_root / "forward" / "forward_step_00020000"
                 ),
                 backward_checkpoint=(
                     ala2_positive_training_root
@@ -1189,24 +1150,17 @@ def _arm_inputs(args: argparse.Namespace) -> list[ArmInput]:
                 seed=3,
                 expected_samples=args.ala2_mixed_samples,
                 forward_checkpoint=(
-                    ala2_mixed_root
-                    / "forward"
-                    / "forward_step_00100000"
+                    ala2_mixed_root / "forward" / "forward_step_00100000"
                 ),
                 backward_checkpoint=(
-                    ala2_mixed_root
-                    / "backward"
-                    / "backward_step_00100000"
+                    ala2_mixed_root / "backward" / "backward_step_00100000"
                 ),
                 pf_archive=(
                     ala2_mixed_root
                     / "pf20k_eval_run1"
                     / f"samples_and_weights_{args.ala2_mixed_samples}.npz"
                 ),
-                config_path=(
-                    config
-                    / "ala2_cg_legacy_mixed_e100_release.yaml"
-                ),
+                config_path=(config / "ala2_cg_legacy_mixed_e100_release.yaml"),
                 forward_role="forward",
                 forward_step=100_000,
                 backward_step=100_000,
@@ -1275,8 +1229,7 @@ def _atomic_numeric_csv(
     if not columns:
         raise ValueError(f"refusing to write an empty numeric CSV: {path}")
     arrays = {
-        str(name): np.asarray(values).reshape(-1)
-        for name, values in columns.items()
+        str(name): np.asarray(values).reshape(-1) for name, values in columns.items()
     }
     lengths = {array.size for array in arrays.values()}
     if len(lengths) != 1:
@@ -1312,10 +1265,7 @@ def _atomic_numeric_csv(
 
 def _atomic_copy(source: Path, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
-    temporary = (
-        destination.parent
-        / f".{destination.name}.tmp-{secrets.token_hex(6)}"
-    )
+    temporary = destination.parent / f".{destination.name}.tmp-{secrets.token_hex(6)}"
     try:
         shutil.copyfile(source, temporary)
         os.replace(temporary, destination)
@@ -1467,18 +1417,12 @@ def _result_row(
                 ),
             }
         )
-        row["proposal_energy_mean_abs_error"] = abs(
-            row["proposal_energy_mean_error"]
-        )
-        row["weighted_energy_mean_abs_error"] = abs(
-            row["weighted_energy_mean_error"]
-        )
+        row["proposal_energy_mean_abs_error"] = abs(row["proposal_energy_mean_error"])
+        row["weighted_energy_mean_abs_error"] = abs(row["weighted_energy_mean_error"])
     else:
         raise AssertionError(f"unhandled release system {arm.system!r}")
     row["js_improvement"] = row["proposal_js"] - row["weighted_js"]
-    row["pmf_error_improvement"] = (
-        row["proposal_pmf_error"] - row["weighted_pmf_error"]
-    )
+    row["pmf_error_improvement"] = row["proposal_pmf_error"] - row["weighted_pmf_error"]
     return row
 
 
@@ -1534,9 +1478,7 @@ def _summary_rows(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
                     "release_role": role,
                     "data_identity": identity,
                     "n": len(values),
-                    "seeds": ",".join(
-                        str(row["seed"]) for row in group
-                    ),
+                    "seeds": ",".join(str(row["seed"]) for row in group),
                     "metric": metric,
                     "mean": float(np.mean(values)),
                     "std": float(np.std(values)),
@@ -1560,16 +1502,15 @@ def _copy_release_configs(
             / "data"
             / "mb2d_equilibrium_exact_v1"
             / "endpoints.manifest.json",
-            project_root
-            / "data"
-            / "mb2d_equilibrium_exact_v1"
-            / "README.md",
+            project_root / "data" / "mb2d_equilibrium_exact_v1" / "README.md",
         }
     )
     copied: list[dict[str, Any]] = []
     for source in sorted(sources):
         if not source.is_file():
-            raise FileNotFoundError(f"release config/input manifest is missing: {source}")
+            raise FileNotFoundError(
+                f"release config/input manifest is missing: {source}"
+            )
         try:
             relative = source.relative_to(project_root)
         except ValueError:
@@ -1620,9 +1561,7 @@ def _validate_visual_contract_sources(project_root: Path) -> dict[str, Any]:
     mb_path = project_root / "src" / "cg_bms_jax" / "evaluation" / "mb.py"
     mb2d_path = project_root / "src" / "cg_bms_jax" / "evaluation" / "mb2d.py"
     ala2_path = project_root / "src" / "cg_bms_jax" / "evaluation" / "ala2.py"
-    style_path = (
-        project_root / "src" / "cg_bms_jax" / "evaluation" / "plot_style.py"
-    )
+    style_path = project_root / "src" / "cg_bms_jax" / "evaluation" / "plot_style.py"
     source_text = {
         path: path.read_text(encoding="utf-8")
         for path in (mb_path, mb2d_path, ala2_path, style_path)
@@ -1686,8 +1625,7 @@ def _validate_visual_contract_sources(project_root: Path) -> dict[str, Any]:
                 failures.append(f"{path}: missing visual-contract token {token!r}")
     if failures:
         raise RuntimeError(
-            "MB release visual contract is not satisfied:\n  "
-            + "\n  ".join(failures)
+            "MB release visual contract is not satisfied:\n  " + "\n  ".join(failures)
         )
     return {
         "palette": RELEASE_PALETTE,
@@ -1743,9 +1681,7 @@ def _capture_input_provenance(
         asset_manifest_path,
         role="pinned_huggingface_asset_manifest",
     )
-    asset_manifest = yaml.safe_load(
-        asset_manifest_path.read_text(encoding="utf-8")
-    )
+    asset_manifest = yaml.safe_load(asset_manifest_path.read_text(encoding="utf-8"))
     if not isinstance(asset_manifest, Mapping):
         raise TypeError(f"asset manifest must be a mapping: {asset_manifest_path}")
     asset_entries = asset_manifest.get("files")
@@ -1796,29 +1732,22 @@ def _capture_input_provenance(
         _absolute(args.ala2_implicit_reference): "ala2_implicit_reference",
     }
     indexed_assets = {
-        _absolute(Path(str(asset["path"]))): str(asset["name"])
-        for asset in assets
+        _absolute(Path(str(asset["path"]))): str(asset["name"]) for asset in assets
     }
     for path, expected_name in requested_references.items():
         if indexed_assets.get(path) != expected_name:
             raise ValueError(
-                f"evaluation reference {path} is not the pinned "
-                f"{expected_name} asset"
+                f"evaluation reference {path} is not the pinned {expected_name} asset"
             )
 
     endpoint_manifest_path = (
-        project_root
-        / "data"
-        / "mb2d_equilibrium_exact_v1"
-        / "endpoints.manifest.json"
+        project_root / "data" / "mb2d_equilibrium_exact_v1" / "endpoints.manifest.json"
     )
     endpoint_manifest_record = record(
         endpoint_manifest_path,
         role="exact_equilibrium_endpoint_manifest",
     )
-    endpoint_manifest = json.loads(
-        endpoint_manifest_path.read_text(encoding="utf-8")
-    )
+    endpoint_manifest = json.loads(endpoint_manifest_path.read_text(encoding="utf-8"))
     if not isinstance(endpoint_manifest, Mapping):
         raise TypeError("MB2D endpoint manifest must be a mapping")
     validation = endpoint_manifest.get("validation")
@@ -1885,8 +1814,7 @@ def _verify_input_snapshots(snapshots: Mapping[str, str]) -> None:
             mismatches.append(f"{path}: expected {expected}, found {actual}")
     if mismatches:
         raise RuntimeError(
-            "release inputs changed during evaluation:\n  "
-            + "\n  ".join(mismatches)
+            "release inputs changed during evaluation:\n  " + "\n  ".join(mismatches)
         )
 
 
@@ -2168,12 +2096,11 @@ def _diagnostic_clip_mapping(path: Path) -> dict[str, np.ndarray]:
     with np.load(path, allow_pickle=False) as archive:
         coordinates = np.asarray(archive["R"])
         energy = np.asarray(archive["U"])
-        raw = (
-            -np.asarray(
-                archive["target_reduced_energy"],
-                dtype=np.float64,
-            ).reshape(-1)
-            - np.asarray(archive["logq_ambient"], dtype=np.float64).reshape(-1)
+        raw = -np.asarray(
+            archive["target_reduced_energy"],
+            dtype=np.float64,
+        ).reshape(-1) - np.asarray(archive["logq_ambient"], dtype=np.float64).reshape(
+            -1
         )
         included = (
             np.asarray(archive["valid_mask"], dtype=bool).reshape(-1)
@@ -2361,9 +2288,7 @@ def _write_mb_plot_data(
 
     grid = np.linspace(0.0, 50.0, 300)
     exact_density = mb_eval.mb_exact_marginal(grid, kT=kT)
-    exact_free = -kT * np.log(
-        np.maximum(exact_density, np.finfo(np.float64).tiny)
-    )
+    exact_free = -kT * np.log(np.maximum(exact_density, np.finfo(np.float64).tiny))
     exact_free -= np.min(exact_free)
     _atomic_numeric_csv(
         plot_data / "density_and_free_energy.csv",
@@ -2546,16 +2471,20 @@ def _write_mb2d_plot_data(
         padding_fraction=FORMAL_ENERGY_VIEW_PADDING,
     )
     energy_edges = np.linspace(lower, upper, energy_bins_count + 1)
+    exact_energy_density = mb2d_eval._energy_density_in_view(
+        exact_energy,
+        energy_edges,
+        weights=exact_weights,
+    )
     _atomic_numeric_csv(
         plot_data / "energy_distribution.csv",
         columns={
             "bin_left": energy_edges[:-1],
             "bin_right": energy_edges[1:],
             "bin_center": 0.5 * (energy_edges[:-1] + energy_edges[1:]),
-            "exact_density": mb2d_eval._energy_density_in_view(
-                exact_energy,
-                energy_edges,
-                weights=exact_weights,
+            "exact_density": exact_energy_density,
+            "exact_display_density": mb2d_eval._smooth_density_for_display(
+                exact_energy_density,
             ),
             "proposal_density": mb2d_eval._energy_density_in_view(
                 sample_energy,
@@ -2585,11 +2514,7 @@ def _write_mb2d_plot_data(
     reported_clip = (
         None
         if resolved_view == "formal_no_clip"
-        else (
-            float(clip_percentile)
-            if clip_percentile is not None
-            else 99.0
-        )
+        else (float(clip_percentile) if clip_percentile is not None else 99.0)
     )
     _atomic_json(
         plot_data / "plot_data_manifest.json",
@@ -2598,9 +2523,7 @@ def _write_mb2d_plot_data(
             "formal": resolved_view == "formal_no_clip",
             "weight_view": resolved_view,
             "clip_percentile": reported_clip,
-            "clip_mode": (
-                None if resolved_view == "formal_no_clip" else clip_mode
-            ),
+            "clip_mode": (None if resolved_view == "formal_no_clip" else clip_mode),
             "weight_source": source,
             "grid_bins": bins,
             "visual_contract": {
@@ -2616,6 +2539,15 @@ def _write_mb2d_plot_data(
             "energy_view": {
                 "display_only": True,
                 "limits": [lower, upper],
+                "exact_curve_smoothing": {
+                    "display_only": True,
+                    "method": "gaussian_kernel_on_histogram_bins",
+                    "sigma_bins": (mb2d_eval.EXACT_ENERGY_DISPLAY_SMOOTH_SIGMA_BINS),
+                    "raw_column": "exact_density",
+                    "display_column": "exact_display_density",
+                    "mass_preserved": True,
+                    "formal_metrics_unchanged": True,
+                },
                 "lower_reference_quantile": FORMAL_ENERGY_LOWER_QUANTILE,
                 "upper_reference_quantile": FORMAL_ENERGY_UPPER_QUANTILE,
                 "padding_fraction": FORMAL_ENERGY_VIEW_PADDING,
@@ -2658,9 +2590,7 @@ def _ala2_rama_grid(
         density=True,
         weights=weights,
     )
-    fes = -(kT / 4.184) * np.log(
-        np.maximum(density, np.finfo(np.float64).tiny)
-    )
+    fes = -(kT / 4.184) * np.log(np.maximum(density, np.finfo(np.float64).tiny))
     fes -= np.nanmin(fes)
     return density, fes, phi_edges, psi_edges
 
@@ -2756,7 +2686,10 @@ def _write_ala2_plot_data(
     angle_centers = 0.5 * (angle_edges[:-1] + angle_edges[1:])
     fes_grid = np.linspace(-np.pi, np.pi, 200)
     for index, name in enumerate(("phi", "psi")):
-        def histogram(values: np.ndarray, weights: np.ndarray | None = None) -> np.ndarray:
+
+        def histogram(
+            values: np.ndarray, weights: np.ndarray | None = None
+        ) -> np.ndarray:
             return np.histogram(
                 values,
                 bins=angle_edges,
@@ -3026,9 +2959,7 @@ def _evaluate_all(
                 energy_histogram_bins=args.energy_bins,
                 clip_percentile=None,
             )
-            mb2d_groups.setdefault(arm.arm, {})[
-                f"seed{arm.seed}"
-            ] = arm.pf_archive
+            mb2d_groups.setdefault(arm.arm, {})[f"seed{arm.seed}"] = arm.pf_archive
             clip_evaluation = evaluate_mb2d(
                 sample=diagnostic_sample,
                 output_dir=clip_figure_dir,
@@ -3044,9 +2975,9 @@ def _evaluate_all(
                     "Diagnostic only: drop top 1% finite raw importance weights"
                 ),
             )
-            mb2d_clip_groups.setdefault(arm.arm, {})[
-                f"seed{arm.seed}"
-            ] = diagnostic_sample
+            mb2d_clip_groups.setdefault(arm.arm, {})[f"seed{arm.seed}"] = (
+                diagnostic_sample
+            )
             _write_mb2d_plot_data(
                 sample=arm.pf_archive,
                 output_dir=figure_dir,
@@ -3123,9 +3054,7 @@ def _evaluate_all(
                     "formal": True,
                     "clip": None,
                     "density_mode": "ambient_exact",
-                    "raw_formula": (
-                        "-target_reduced_energy-logq_ambient"
-                    ),
+                    "raw_formula": ("-target_reduced_energy-logq_ambient"),
                 },
                 "metrics": metrics,
             },
@@ -3453,8 +3382,7 @@ def _summary_json(
             },
         )
         group["metrics"][str(row["metric"])] = {
-            field: row[field]
-            for field in ("n", "mean", "std", "minimum", "maximum")
+            field: row[field] for field in ("n", "mean", "std", "minimum", "maximum")
         }
     return {
         "schema_version": SCHEMA_VERSION,
@@ -3540,9 +3468,7 @@ def _readme(
     ]
     for system, arm in groups:
         group_rows = [
-            row
-            for row in rows
-            if row["system"] == system and row["arm"] == arm
+            row for row in rows if row["system"] == system and row["arm"] == arm
         ]
         table.append(
             "| "
@@ -3750,9 +3676,7 @@ def build_release(args: argparse.Namespace) -> Path:
         raise FileNotFoundError(f"project root is missing: {project_root}")
     git_provenance = _git_provenance(project_root)
     if not git_provenance.get("commit"):
-        raise RuntimeError(
-            "canonical v0.1 must be built from a committed git revision"
-        )
+        raise RuntimeError("canonical v0.1 must be built from a committed git revision")
     if git_provenance.get("dirty") is not False:
         raise RuntimeError(
             "canonical v0.1 must start from a clean git worktree; commit the "
@@ -3957,9 +3881,7 @@ def _canonical_release_mismatches(
         rel_tol=0.0,
         abs_tol=1.0e-15,
     ):
-        mismatches.append(
-            f"ala2_kT={args.ala2_kT!r} (required 2.494338785445972)"
-        )
+        mismatches.append(f"ala2_kT={args.ala2_kT!r} (required 2.494338785445972)")
     return mismatches
 
 
@@ -3971,8 +3893,7 @@ def _validate_canonical_release_arguments(
     if mismatches:
         parser.error(
             "v0.1 is an immutable canonical benchmark; noncanonical settings "
-            "must use a different release builder/name:\n  "
-            + "\n  ".join(mismatches)
+            "must use a different release builder/name:\n  " + "\n  ".join(mismatches)
         )
 
 
@@ -4000,12 +3921,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
     if args.ala2_implicit_reference is None:
         args.ala2_implicit_reference = (
-            root
-            / "assets"
-            / "cache"
-            / "Ac-Ala-NHMe"
-            / "implicit"
-            / "data.npz"
+            root / "assets" / "cache" / "Ac-Ala-NHMe" / "implicit" / "data.npz"
         )
     for field in (
         "mb_samples",
