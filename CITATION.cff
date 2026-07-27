@@ -2,7 +2,7 @@ cff-version: 1.2.0
 title: cg-bms-jax
 message: "Please cite cg-bms-jax, Bridge Matching Sampler, and CG-BG when using this software."
 type: software
-version: 0.1.1
+version: 0.1.2
 date-released: 2026-07-27
 license: LicenseRef-FAIR-Chemistry-1.0
 repository-code: "https://github.com/korarako/cg-bms-jax"
