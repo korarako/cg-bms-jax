@@ -36,7 +36,6 @@ from cg_bms_jax.experiment.training_support import checkpoint_metadata
 from cg_bms_jax.runtime import (
     build_runtime_system,
     config_as_dict,
-    repository_root,
     resolve_project_path,
 )
 from cg_bms_jax.training import (
@@ -124,7 +123,7 @@ def _bridge_distribution(
         bridge_data,
         affine_offset=affine["offset"],
         affine_scale=affine["scale"],
-        base_dir=repository_root(),
+        base_dir=resolve_project_path("."),
         expected_target=expected_target,
     )
     if distribution.dimension != system.event_shape[0]:

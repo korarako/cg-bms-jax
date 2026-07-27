@@ -1,0 +1,31 @@
+defaults:
+  - experiment: ala2_ambient18_300k
+  - _self_
+
+# Supervised molecular Bridge Matching. The objective consumes only the pinned
+# training endpoints. Runtime still verifies the PMF asset for system identity
+# and standardization, but does not evaluate the PMF or reference trajectory.
+seed: ${oc.select:experiment.formal_bridge.seed,0}
+output_dir: outputs/${experiment.name}/warmstart
+progress_every: 100
+checkpoint_every: ${oc.select:experiment.formal_bridge.checkpoint_every,10000}
+
+pretrain:
+  updates: ${oc.select:experiment.formal_bridge.updates,100000}
+  batch_size: ${oc.select:experiment.formal_bridge.batch_size,64}
+  learning_rate: ${oc.select:experiment.formal_bridge.learning_rate,3.0e-4}
+  final_learning_rate: ${oc.select:experiment.formal_bridge.final_learning_rate,1.0e-4}
+  learning_rate_warmup_updates: ${oc.select:experiment.formal_bridge.learning_rate_warmup_updates,5000}
+  learning_rate_decay_updates: ${oc.select:experiment.formal_bridge.learning_rate_decay_updates,100000}
+  learning_rate_warmup_start_factor: 1.0e-3
+  gradient_clip_norm: 100.0
+  weight_decay: 1.0e-3
+  bridge_matching_max_time: 0.99
+
+data:
+  validation_fraction: 0.1
+  test_fraction: 0.1
+  gap_frames: 100
+  split_seed: 0
+  random_rotation: true
+  add_com_noise: true

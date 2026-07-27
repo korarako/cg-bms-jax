@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cg-bms-jax"
-version = "0.1.1"
+version = "0.1.2"
 description = "Pure-JAX bridge matching samplers and exact-density reweighting for Boltzmann distributions"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
@@ -47,6 +47,9 @@ all_atom = [
 ]
 eval = ["ott-jax>=0.5,<0.6"]
 [project.scripts]
+cg-bms-pretrain-bridge = "cg_bms_jax.experiment.pretrain_bridge:main"
+cg-bms-pretrain-flat-bridge = "cg_bms_jax.experiment.pretrain_flat_bridge:main"
+cg-bms-generate-mb2d-equilibrium = "cg_bms_jax.experiment.generate_mb2d_equilibrium:main"
 cg-bms-train-forward = "cg_bms_jax.experiment.train_forward:main"
 cg-bms-sample-sde = "cg_bms_jax.experiment.sample_sde:main"
 cg-bms-train-backward = "cg_bms_jax.experiment.train_backward:main"
