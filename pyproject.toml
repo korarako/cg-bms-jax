@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cg-bms-jax"
-version = "0.1.0"
+version = "0.1.1"
 description = "Pure-JAX bridge matching samplers and exact-density reweighting for Boltzmann distributions"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
@@ -46,24 +46,12 @@ all_atom = [
   "openmm>=8.1,<9",
 ]
 eval = ["ott-jax>=0.5,<0.6"]
-dev = [
-  "pytest>=8,<10",
-  "pytest-cov>=5,<7",
-  "ruff>=0.9,<1",
-  "build>=1.2,<2",
-]
-
 [project.scripts]
-cg-bms-pretrain-bridge = "cg_bms_jax.experiment.pretrain_bridge:main"
-cg-bms-pretrain-flat-bridge = "cg_bms_jax.experiment.pretrain_flat_bridge:main"
-cg-bms-generate-mb2d-equilibrium = "cg_bms_jax.experiment.generate_mb2d_equilibrium:main"
 cg-bms-train-forward = "cg_bms_jax.experiment.train_forward:main"
 cg-bms-sample-sde = "cg_bms_jax.experiment.sample_sde:main"
 cg-bms-train-backward = "cg_bms_jax.experiment.train_backward:main"
 cg-bms-sample-reweight = "cg_bms_jax.experiment.sample_reweight:main"
 cg-bms-evaluate = "cg_bms_jax.experiment.evaluate:main"
-cg-bms-mb2d-suite = "cg_bms_jax.experiment.mb2d_suite:main"
-cg-bms-validate-pf = "cg_bms_jax.experiment.validate_pf:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/cg_bms_jax"]
@@ -74,15 +62,3 @@ packages = ["src/cg_bms_jax"]
 "LICENSES" = "cg_bms_jax/LICENSES"
 "THIRD_PARTY_NOTICES.md" = "cg_bms_jax/THIRD_PARTY_NOTICES.md"
 "UPSTREAM.md" = "cg_bms_jax/UPSTREAM.md"
-"data/mb2d_equilibrium_exact_v1" = "cg_bms_jax/data/mb2d_equilibrium_exact_v1"
-
-[tool.pytest.ini_options]
-addopts = "-ra"
-testpaths = ["tests"]
-
-[tool.ruff]
-line-length = 120
-target-version = "py311"
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
