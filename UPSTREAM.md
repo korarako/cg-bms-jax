@@ -33,9 +33,7 @@
 - Repository: https://github.com/tummfm/chemtrain
 - Revision: `a97ca2dd60c8327f574f269d02ec5edbccbae6b8`
 
-## AMBoltz/TAM Ala2 reference
+## Optional all-atom reference data
 
-- Local source: sibling `amboltz/data/ala2/implicit_obc1_openmm.npz`
-- SHA-256: `75c9d837e58e01dfca9dadd6faf6fa2011d3567b2fe7e4ee88cc891c803c62e4`
-- Use: external 300 K implicit-OBC1 bridge/reference trajectory; not
-  redistributed in the package
+All-atom trajectories are user-supplied runtime inputs and are not
+redistributed with this source package.
